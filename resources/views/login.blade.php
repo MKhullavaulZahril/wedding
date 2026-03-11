@@ -10,6 +10,8 @@
 </head>
 <body>
 
+<div class="bg-layer"></div>
+
 <div class="card">
     <div class="brand-name">Wedding <em>Organizations</em></div>
 
@@ -56,8 +58,13 @@
             Google
         </a>
         
-        <a href="{{ route('register') }}" class="back-link">Belum punya akun? <span>Daftar sekarang</span></a>
+        <a href="{{ route('register', ['redirect_to' => request()->query('redirect_to')]) }}" class="back-link">Belum punya akun? <span>Daftar sekarang</span></a>
     </form>
+</div>
+
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Sedang memproses...</div>
 </div>
 
 <script type="module">
@@ -76,12 +83,18 @@
         measurementId: "{{ env('FIREBASE_MEASUREMENT_ID') }}"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
+    const overlay = document.getElementById('loadingOverlay');
+
+    function showLoading() {
+        overlay.classList.add('active');
+    }
+
     window.loginWithGoogle = function() {
+        showLoading();
         signInWithPopup(auth, provider)
             .then((result) => {
                 const user = result.user;
@@ -105,19 +118,27 @@
                     if (data.status === 'success') {
                         window.location.href = data.redirect;
                     } else {
+                        overlay.classList.remove('active');
                         alert("Gagal sinkronisasi sesi Laravel.");
                     }
                 })
                 .catch(err => {
+                    overlay.classList.remove('active');
                     console.error("Fetch Error:", err);
                     alert("Terjadi kesalahan koneksi ke server.");
                 });
 
             }).catch((error) => {
+                overlay.classList.remove('active');
                 console.error("Error Login:", error.message);
                 alert("Gagal login Google: " + error.message);
             });
     }
+
+    // Handle normal form submit loading
+    document.querySelector('form').addEventListener('submit', function() {
+        showLoading();
+    });
 
     function togglePassword(inputId) {
         const passwordInput = document.getElementById(inputId);

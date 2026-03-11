@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/venue-detail.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/global-layout.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart.css') }}">
 </head>
 <body>
 
@@ -48,9 +50,17 @@
                     <a href="{{ route('venues.index') }}" class="back-button" title="Kembali ke Daftar Venue">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                     </a>
-                    <div class="profile-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    </div>
+                    <a href="{{ route('profile.edit') }}" class="profile-icon" title="Edit Profil" style="overflow: hidden; display: flex; align-items: center; justify-content: center; text-decoration: none; color: inherit;">
+                        @auth
+                            @if(Auth::user()->profile_photo)
+                                <img src="{{ asset(Auth::user()->profile_photo) }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            @else
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            @endif
+                        @else
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        @endauth
+                    </a>
                 </div>
                 <div class="menu-icon" id="toggleRight">
                     <span></span>
@@ -67,6 +77,7 @@
         </div>
     </div>
 
+    <main>
     <!-- ══ MAIN CONTENT PANELS ════════════════════════════ -->
     <div class="panels-container">
         
@@ -74,7 +85,7 @@
         <div class="panel panel-left">
             <div class="venue-showcase">
                 <div class="main-gallery-card">
-                    <img src="{{ $venue['image'] }}" alt="{{ $venue['name'] }}">
+                    <img src="{{ $venue['image'] }}" alt="{{ $venue['name'] }}" loading="lazy">
                     <div class="gallery-arrows">
                         <span class="arr-l">&lt;</span>
                         <span class="arr-r">&gt;</span>
@@ -99,7 +110,7 @@
                 <div class="secondary-gallery">
                     @foreach(array_slice($venue['gallery'] ?? [], 1, 6) as $img)
                         <div class="gal-item">
-                            <img src="{{ $img }}" alt="Preview">
+                            <img src="{{ $img }}" alt="Preview" loading="lazy">
                         </div>
                     @endforeach
                 </div>
@@ -125,6 +136,24 @@
                         <a href="{{ route('login', ['redirect_to' => route('checkout', ['venue_id' => $venue['id']] + request()->query())]) }}" class="btn-book-now">Pesan Sekarang</a>
                     @endauth
                 </div>
+
+                {{-- Tombol Simpan ke Keranjang --}}
+                <button
+                    class="btn-add-to-cart"
+                    data-id="{{ $venue['id'] }}"
+                    data-type="venue"
+                    onclick="woCartAdd({
+                        id: '{{ $venue['id'] }}',
+                        type: 'venue',
+                        name: '{{ addslashes($venue['name']) }}',
+                        price: '{{ addslashes($venue['price']) }}',
+                        location: '{{ addslashes($venue['location']) }}',
+                        image: '{{ $venue['image'] }}'
+                    }); updateAddButtonState('{{ $venue['id'] }}', 'venue')"
+                >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    Simpan ke Keranjang
+                </button>
             </div>
         </div>
 
@@ -134,7 +163,7 @@
                 <h3 class="panel-section-title">Property owner</h3>
                 <div class="owner-premium-card">
                     <div class="owner-avatar">
-                        <img src="{{ $venue['owner']['image'] }}" alt="Owner">
+                        <img src="{{ $venue['owner']['image'] }}" alt="Owner" loading="lazy">
                     </div>
                     <div class="owner-details">
                         <h4>{{ $venue['owner']['name'] }}</h4>
@@ -173,8 +202,9 @@
             </div>
         </div>
 
-    </div>
+    </main>
 
+    <script src="{{ asset('js/cart.js') }}"></script>
     <script>
         const leftSidebar  = document.getElementById('leftSidebar');
         const rightSidebar = document.getElementById('rightSidebar');

@@ -31,20 +31,13 @@ Route::get('/flowers', [FlowerController::class , 'index'])->name('flowers.index
 Route::get('/flowers/{id}', [FlowerController::class , 'show'])->name('flowers.show');
 
 Route::get('/checkout/{venue_id?}', [\App\Http\Controllers\BookingController::class , 'checkout'])->name('checkout')->middleware('auth');
-Route::post('/checkout/pay', function () {
-    return redirect()->route('dashboard')->with('success', 'Pembayaran Berhasil!');
-})->name('checkout.pay')->middleware('auth');
+Route::post('/checkout/pay', [\App\Http\Controllers\BookingController::class , 'pay'])->name('checkout.pay')->middleware('auth');
 
 Route::get('/orders', [\App\Http\Controllers\BookingController::class , 'orders'])->name('orders')->middleware('auth');
 
 // Profile Routes
-Route::get('/profile/edit', function () {
-    return view('edit-profile');
-})->name('profile.edit')->middleware('auth');
-
-Route::post('/profile/edit', function (\Illuminate\Http\Request $request) {
-    return redirect()->route('dashboard')->with('success', 'Profil dan Password berhasil diperbarui!');
-})->name('profile.update')->middleware('auth');
+Route::get('/profile/edit', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
+Route::post('/profile/edit', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
 
 Route::get('/rating', function () {
     return view('rating');

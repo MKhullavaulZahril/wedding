@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Vendor - {{ $vendor['name'] }}</title>
     <link rel="stylesheet" href="{{ asset('css/flower-detail.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/global-layout.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart.css') }}">
 </head>
 <body>
     <!-- --- HEADER --- -->
@@ -14,9 +16,17 @@
                 <a href="{{ route('flowers.index') }}" class="back-btn" title="Kembali ke Daftar Vendor">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                 </a>
-                <div class="profile-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                </div>
+                <a href="{{ route('profile.edit') }}" class="profile-icon" title="Edit Profil" style="overflow: hidden; display: flex; align-items: center; justify-content: center; text-decoration: none; color: inherit;">
+                    @auth
+                        @if(Auth::user()->profile_photo)
+                            <img src="{{ asset(Auth::user()->profile_photo) }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        @else
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        @endif
+                    @else
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    @endauth
+                </a>
             </div>
             <div class="menu-icon" id="toggleRight">
                 <span></span>
@@ -26,6 +36,7 @@
         </div>
     </div>
 
+    <main>
     <!-- --- DATE INFO --- -->
     <div style="display: flex; gap: 24px; justify-content: center; margin-top: -25px; position: relative; z-index: 20;">
         <div style="background: white; padding: 12px 40px; border-radius: 50px; border: 1.5px solid var(--primary-light); color: var(--text-muted); font-size: 0.85rem; font-weight: 500; min-width: 200px; text-align: center; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);">{{ request('date_start', date('Y-m-d')) }}</div>
@@ -37,7 +48,7 @@
         <!-- Left Panel -->
         <div class="left-panel">
             <div class="hero-img-container">
-                <img src="{{ $vendor['main_image'] }}" alt="{{ $vendor['name'] }}">
+                <img src="{{ $vendor['main_image'] }}" alt="{{ $vendor['name'] }}" loading="lazy">
                 <div style="position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px;">
                     <span style="width: 6px; height: 6px; background: #fff; border-radius: 50%;"></span>
                     <span style="width: 6px; height: 6px; background: rgba(255,255,255,0.5); border-radius: 50%;"></span>
@@ -53,9 +64,28 @@
                     <div class="location-text">{{ $vendor['location'] }}</div>
                 </div>
                 <div style="text-align: right;">
-                    <div style="display: flex; gap: 10px; align-items: center;">
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end;">
                         <button class="btn-contact">Hubungi Vendor</button>
                         <a href="{{ route('checkout', request()->query()) }}" class="btn-book">Pesan Sekarang</a>
+                        
+                        {{-- Tombol Simpan ke Keranjang --}}
+                        <button 
+                            class="btn-add-to-cart" 
+                            style="width: auto; min-width: 200px; margin-top: 0;"
+                            data-id="{{ $vendor['id'] }}" 
+                            data-type="vendor"
+                            onclick="woCartAdd({
+                                id: '{{ $vendor['id'] }}',
+                                type: 'vendor',
+                                name: '{{ addslashes($vendor['name']) }}',
+                                price: '{{ addslashes($vendor['price']) }}',
+                                location: '{{ addslashes($vendor['location']) }}',
+                                image: '{{ $vendor['main_image'] }}'
+                            }); updateAddButtonState('{{ $vendor['id'] }}', 'vendor')"
+                        >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                            Simpan ke Keranjang
+                        </button>
                     </div>
                     <div class="price-display">{{ $vendor['price'] }}</div>
                 </div>
@@ -64,7 +94,7 @@
             <div class="categories-grid">
                 @foreach($vendor['categories'] as $cat)
                 <div class="category-card">
-                    <img src="{{ $cat['image'] }}" alt="{{ $cat['name'] }}">
+                    <img src="{{ $cat['image'] }}" alt="{{ $cat['name'] }}" loading="lazy">
                     <div class="category-overlay">
                         <span class="category-name">{{ $cat['name'] }}</span>
                     </div>
@@ -91,7 +121,7 @@
             <div class="section-label">Pemilik Properti</div>
             <div class="owner-premium-card">
                 <div class="owner-image-box">
-                    <img src="{{ $vendor['owner']['image'] }}" alt="{{ $vendor['owner']['name'] }}">
+                    <img src="{{ $vendor['owner']['image'] }}" alt="{{ $vendor['owner']['name'] }}" loading="lazy">
                 </div>
                 <div class="owner-detail-box">
                     <h4>{{ $vendor['owner']['name'] }}</h4>
@@ -118,6 +148,56 @@
                 </div>
             </div>
         </div>
-    </div>
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar sidebar-left" id="leftSidebar">
+        <p class="sidebar-label">Jelajahi</p>
+        <ul class="sidebar-menu">
+            <li><a href="{{ route('dashboard') }}">Beranda</a></li>
+            <li><a href="{{ route('venues.index') }}">Gedung</a></li>
+            <li><a href="{{ route('flowers.index') }}">Vendor</a></li>
+        </ul>
+    </aside>
+
+    <!-- Right Sidebar -->
+    <aside class="sidebar sidebar-right" id="rightSidebar">
+        <p class="sidebar-label" style="text-align:right">Akun</p>
+        <ul class="sidebar-menu">
+            @auth
+                <li><p style="padding: 12px 28px; font-size: 0.8rem; color: #888; text-align: right;">{{ Auth::user()->name }}</p></li>
+                <li><a href="{{ route('orders') }}">Pemesanan Saya</a></li>
+                <li><a href="{{ route('logout') }}" class="danger" style="color: #c0445e;">Keluar</a></li>
+            @else
+                <li><a href="{{ route('login') }}">Masuk</a></li>
+                <li><a href="{{ route('register') }}">Daftar</a></li>
+            @endauth
+        </ul>
+    </aside>
+    </main>
+
+    <script src="{{ asset('js/cart.js') }}"></script>
+    <script>
+        const leftSidebar  = document.getElementById('leftSidebar');
+        const rightSidebar = document.getElementById('rightSidebar');
+        const overlay      = document.getElementById('overlay');
+
+        function openSidebar(sb) {
+            sb.classList.add('active');
+            overlay.classList.add('active');
+        }
+        function closeAll() {
+            leftSidebar.classList.remove('active');
+            rightSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        document.getElementById('toggleRight').addEventListener('click', e => {
+            e.stopPropagation();
+            rightSidebar.classList.contains('active') ? closeAll() : openSidebar(rightSidebar);
+        });
+        overlay.addEventListener('click', closeAll);
+    </script>
 </body>
 </html>

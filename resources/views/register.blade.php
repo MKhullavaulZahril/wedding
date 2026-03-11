@@ -10,13 +10,15 @@
 </head>
 <body>
 
+<div class="bg-layer"></div>
+
 <div class="card">
     <div class="brand-name">Wedding <em>Organizations</em></div>
 
     <div class="card-title">Sign Up</div>
     <div class="card-sub">Buat akun baru untuk mulai merencanakan pernikahan impian Anda bersama kami.</div>
 
-    <form action="{{ route('register') }}" method="POST" autocomplete="off">
+    <form action="{{ route('register', ['redirect_to' => request()->query('redirect_to')]) }}" method="POST" autocomplete="off">
         @csrf
         <div class="field">
             <label>Nama Lengkap</label>

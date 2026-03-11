@@ -192,6 +192,13 @@
                     </div>
                 </div>
 
+                <!-- Hidden Fields for Firebase Storage -->
+                <input type="hidden" name="item_id" value="{{ request('venue_id') }}">
+                <input type="hidden" name="item_name" value="{{ $booking['item_name'] }}">
+                <input type="hidden" name="image" value="{{ str_replace(url('/'), '', $booking['image']) }}">
+                <input type="hidden" name="location" value="{{ $booking['location'] }}">
+                <input type="hidden" name="total_price" value="{{ preg_replace('/\D/', '', $booking['summary']['Total']) }}">
+
                 <!-- Terms -->
                 <div class="terms-check">
                     <label>

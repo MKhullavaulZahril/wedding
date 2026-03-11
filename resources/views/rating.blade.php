@@ -187,7 +187,7 @@
                         <div class="sort-btn">Terbaru ▾</div>
                     </div>
 
-                    <div class="review-item">
+                    <div class="review-item" style="animation: fadeInUp 0.8s ease backwards; animation-delay: 0.2s;">
                         <div class="reviewer-info">
                             <div class="reviewer-avatar">A</div>
                             <div class="reviewer-text">
@@ -214,7 +214,7 @@
                         </button>
                     </div>
 
-                    <div class="review-item">
+                    <div class="review-item" style="animation: fadeInUp 0.8s ease backwards; animation-delay: 0.4s;">
                         <div class="reviewer-info">
                             <div class="reviewer-avatar">D</div>
                             <div class="reviewer-text">
@@ -240,7 +240,7 @@
                         </button>
                     </div>
 
-                    <div class="review-item">
+                    <div class="review-item" style="animation: fadeInUp 0.8s ease backwards; animation-delay: 0.6s;">
                         <div class="reviewer-info">
                             <div class="reviewer-avatar">B</div>
                             <div class="reviewer-text">
