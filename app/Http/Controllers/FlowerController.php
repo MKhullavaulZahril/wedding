@@ -3,67 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\FirebaseService;
+use App\Models\Vendor;
 
 class FlowerController extends Controller
 {
-    protected $firebase;
-
-    public function __construct(FirebaseService $firebase)
-    {
-        $this->firebase = $firebase;
-    }
-
     public function index(Request $request)
     {
         $category = $request->query('category');
-        
-        try {
-            if ($category) {
-                // Try fast server-side filtering first
-                $vendorsData = $this->firebase->getCachedDataFiltered('vendors', 'type', $category, 50, 15);
-            } else {
-                // Fetch first 50 items for speed
-                $vendorsData = $this->firebase->getCachedDataLimited('vendors', 50, 15);
-            }
-        } catch (\Exception $e) {
-            // Fallback: Fetch everything and filter in PHP if Firebase indexing isn't ready
-            $vendorsData = $this->firebase->getCachedData('vendors', 60);
-        }
-        
-        if (!$vendorsData) {
-            $vendorsData = [];
+        $query = Vendor::query();
+
+        if ($category) {
+            $query->where('type', 'like', '%' . $category . '%');
         }
 
-        $vendorsCollection = collect($vendorsData)->filter();
-
-        // Filter berdasarkan kategori/type jika ada
-        if ($request->filled('category')) {
-            $vendorsCollection = $vendorsCollection->filter(function($item) use ($request) {
-                return strtolower($item['type'] ?? '') == strtolower($request->category);
-            });
-        }
-
-        $vendors = $vendorsCollection->values();
+        $vendors = $query->latest('id')->paginate(20)->withQueryString();
         
         return view('flowers', compact('vendors'));
     }
 
-    /**
-     * Tampilkan detail vendor bunga spesifik dari Firebase.
-     */
     public function show($id)
     {
-        $vendor = $this->firebase->getCachedData("vendors/$id", 30);
+        $vendor = Vendor::findOrFail($id);
 
-        if (!$vendor) {
-            abort(404, 'Vendor bunga tidak ditemukan.');
-        }
+        $ownerName = is_string($vendor->owner) ? $vendor->owner : (isset($vendor->owner['name']) ? $vendor->owner['name'] : 'Unknown');
 
-        // Konversi ke object-like array untuk kompatibilitas dengan view
-        $vendor = (object) $vendor;
-
-        // Format data agar kompatibel dengan view (yang mengharapkan 'owner' sebagai array)
         $vendorData = [
             'id' => $vendor->id,
             'name' => $vendor->name,
@@ -71,14 +34,15 @@ class FlowerController extends Controller
             'location' => $vendor->location ?? '',
             'price' => $vendor->price ?? '0',
             'about' => $vendor->about ?? '',
-            'features' => $vendor->features ?? [],
-            'categories' => $vendor->categories ?? [],
-            'testimonials' => $vendor->testimonials ?? [],
-            'main_image' => $vendor->image ?? '',
+            'features' => is_string($vendor->features) ? json_decode($vendor->features, true) : ($vendor->features ?? []),
+            'categories' => is_string($vendor->categories) ? json_decode($vendor->categories, true) : ($vendor->categories ?? []),
+            'testimonials' => is_string($vendor->testimonials) ? json_decode($vendor->testimonials, true) : ($vendor->testimonials ?? []),
+            'main_image' => asset(ltrim($vendor->image ?? '', '/')),
+            'image' => asset(ltrim($vendor->image ?? '', '/')),
             'owner' => [
-                'name' => is_array($vendor->owner) ? ($vendor->owner['name'] ?? 'Unknown') : ($vendor->owner ?? 'Unknown'),
+                'name' => $ownerName,
                 'bio' => 'Pemilik ' . ($vendor->name ?? 'Vendor') . ' yang berpengalaman dan berdedikasi menghadirkan bunga terbaik untuk momen spesial Anda.',
-                'image' => 'https://images.unsplash.com/photo-1544124499-58912cbddada?auto=format&fit=crop&w=400&q=80',
+                'image' => 'https://ui-avatars.com/api/?name=' . urlencode($ownerName) . '&background=f9d8e4&color=d13d6a',
             ],
         ];
 

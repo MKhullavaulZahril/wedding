@@ -3,33 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\FirebaseService;
+use App\Models\Booking;
+use App\Models\Venue;
 
 class BookingController extends Controller
 {
-    protected $firebase;
-
-    public function __construct(FirebaseService $firebase)
-    {
-        $this->firebase = $firebase;
-    }
-
     /**
      * Tampilkan halaman checkout.
      */
     public function checkout($venue_id = null)
     {
-        // Jika ada venue_id, ambil dari Firebase
+        // Jika ada venue_id, ambil dari MySQL
         if ($venue_id) {
-            $venue = $this->firebase->getData("venues/$venue_id");
+            $venue = Venue::find($venue_id);
             if ($venue) {
-                $venue = (object) $venue;
+                // Owner logic fix
+                $ownerName = is_string($venue->owner) ? $venue->owner : (isset($venue->owner['name']) ? $venue->owner['name'] : 'Unknown');
+
+                $gallery = is_string($venue->gallery) ? json_decode($venue->gallery, true) : ($venue->gallery ?? []);
+                if(!is_array($gallery)) $gallery = [];
+        
                 $booking = [
                     'item_name' => $venue->name,
-                    'owner' => is_array($venue->owner) ? ($venue->owner['name'] ?? 'Unknown') : ($venue->owner ?? 'Unknown'),
+                    'owner' => $ownerName,
                     'location' => $venue->location,
                     'price_per_night' => 'IDR ' . number_format((float)($venue->price ?? 0), 0, ',', '.'),
-                    'image' => asset($venue->image ?? ''),
+                    'image' => asset(ltrim($venue->image ?? '', '/')),
                     'details' => [
                         'check_in' => request('date_start', '2026-03-07'),
                         'check_out' => request('date_end', '2026-03-13'),
@@ -42,7 +41,7 @@ class BookingController extends Controller
                         'Pajak (11%)' => 'IDR ' . number_format((float)($venue->price ?? 0) * 0.11, 0, ',', '.'),
                         'Total' => 'IDR ' . number_format((float)($venue->price ?? 0) * 1.11 + 50000, 0, ',', '.')
                     ],
-                    'gallery' => $venue->gallery ?? []
+                    'gallery' => $gallery
                 ];
                 return view('checkout', compact('booking'));
             }
@@ -81,45 +80,41 @@ class BookingController extends Controller
     }
 
     /**
-     * Tampilkan riwayat pemesanan pengguna dari Firebase.
+     * Tampilkan riwayat pemesanan pengguna dari MySQL.
      */
     public function orders()
     {
-        // Ambil data bookings dari Firebase
         $userId = auth()->id();
-        $allBookings = $this->firebase->getData('bookings');
-        
-        $myBookings = collect($allBookings ?? [])
-            ->filter(function($booking) use ($userId) {
-                return isset($booking['user_id']) && (string)$booking['user_id'] === (string)$userId;
-            })
-            ->sortByDesc('created_at');
+        $myBookings = Booking::where('user_id', $userId)->latest()->get();
 
         $orders = [];
-        foreach ($myBookings as $id => $booking) {
-            $booking = (object) $booking;
+        foreach ($myBookings as $booking) {
             // Map status classes
             $statusClass = 'status-warning';
             if ($booking->status === 'Selesai') $statusClass = 'status-success';
             if ($booking->status === 'Dibatalkan') $statusClass = 'status-danger';
 
+            $details = is_string($booking->booking_details) ? json_decode($booking->booking_details, true) : ($booking->booking_details ?? []);
+
+            $itemName = isset($details['item_name']) ? $details['item_name'] : 'Item #' . ($booking->item_id ?? '');
+
             $orders[] = [
-                'id' => $booking->id ?? $id,
-                'venue_name' => $booking->item_name ?? 'Item #' . ($booking->item_id ?? ''),
+                'id' => $booking->id,
+                'venue_name' => $itemName,
                 'venue_id' => $booking->item_id ?? null,
-                'location' => $booking->location ?? '-',
-                'date' => date('d M Y', strtotime($booking->created_at ?? 'now')),
+                'location' => $details['location'] ?? '-',
+                'date' => $booking->created_at ? $booking->created_at->format('d M Y') : date('d M Y'),
                 'total_price' => 'IDR ' . number_format((float)($booking->total_price ?? 0), 0, ',', '.'),
                 'status' => $booking->status ?? 'Diproses',
                 'status_class' => $statusClass,
-                'image' => asset($booking->image ?? '')
+                'image' => asset(ltrim($details['image'] ?? '', '/'))
             ];
         }
 
         // Demo data if empty
         if (empty($orders)) {
-            // Ambil 3 venue pertama dari Firebase untuk demo
-            $venues = collect($this->firebase->getData('venues') ?? [])->take(3);
+            // Ambil 3 venue pertama dari Database MySQL untuk demo
+            $venues = Venue::take(3)->get();
             
             $statuses = [
                 ['text' => 'Selesai', 'class' => 'status-success'],
@@ -127,8 +122,7 @@ class BookingController extends Controller
                 ['text' => 'Menunggu Pembayaran', 'class' => 'status-danger'],
             ];
 
-            foreach ($venues->values() as $index => $venue) {
-                $venue = (object) $venue;
+            foreach ($venues as $index => $venue) {
                 $orders[] = [
                     'id' => 'ORD-00' . ($index + 1),
                     'venue_name' => $venue->name,
@@ -147,30 +141,30 @@ class BookingController extends Controller
     }
 
     /**
-     * Proses pembayaran (Simpan ke Firebase).
+     * Proses pembayaran (Simpan ke MySQL).
      */
     public function pay(Request $request)
     {
         $userId = auth()->id();
-        $bookingData = $request->all();
         
-        // Simpan ke Firebase Realtime Database
         try {
-            $this->firebase->pushData('bookings', [
+            Booking::create([
                 'user_id' => $userId,
-                'item_id' => $request->item_id,
+                'item_type' => 'venue',
+                'item_id' => $request->item_id ?? '1',
                 'status' => 'Selesai',
-                'created_at' => now()->toDateTimeString(),
-                'item_name' => $request->item_name ?? 'Wedding Service',
-                'image' => $request->image ?? '',
-                'location' => $request->location ?? '',
                 'total_price' => $request->total_price ?? 0,
-                'payment_method' => $request->payment_method ?? 'Card',
+                'booking_details' => [
+                    'item_name' => $request->item_name ?? 'Wedding Service',
+                    'image' => $request->image ?? '',
+                    'location' => $request->location ?? '',
+                    'payment_method' => $request->payment_method ?? 'Card',
+                ],
             ]);
 
-            return redirect()->route('orders')->with('success', 'Pembayaran Berhasil! Pesanan Anda telah tersimpan di Cloud.');
+            return redirect()->route('orders')->with('success', 'Pembayaran Berhasil! Pesanan Anda telah tersimpan di Database.');
         } catch (\Exception $e) {
-            \Log::error('Booking Firebase Error: ' . $e->getMessage());
+            \Log::error('MySQL Booking Error: ' . $e->getMessage());
             return back()->with('error', 'Maaf, terjadi kesalahan saat menyimpan pesanan.');
         }
     }
