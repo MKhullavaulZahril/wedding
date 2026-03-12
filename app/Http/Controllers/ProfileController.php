@@ -53,15 +53,6 @@ class ProfileController extends Controller
         $user->email = $request->email;
         $user->save();
 
-        // Sinkronisasi ke Firebase
-        $firebase = app(\App\Services\FirebaseService::class);
-        $firebase->updateData("users/{$user->id}", [
-            'name'  => $fullName,
-            'email' => $request->email,
-            'password' => $user->password, // Password terupdate (hash)
-            'profile_photo' => $user->profile_photo ? asset($user->profile_photo) : null,
-        ]);
-
         return redirect()->route('dashboard')->with('success', 'Profil Anda telah berhasil diperbarui!');
     }
 }

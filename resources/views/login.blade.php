@@ -67,76 +67,20 @@
     <div class="loading-text">Sedang memproses...</div>
 </div>
 
-<script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
-    // Your web app's Firebase configuration dari .env
-    const firebaseConfig = {
-        apiKey: "{{ env('FIREBASE_API_KEY') }}",
-        authDomain: "{{ env('FIREBASE_AUTH_DOMAIN') }}",
-        projectId: "{{ env('FIREBASE_PROJECT_ID') }}",
-        storageBucket: "{{ env('FIREBASE_STORAGE_BUCKET') }}",
-        messagingSenderId: "{{ env('FIREBASE_MESSAGING_SENDER_ID') }}",
-        appId: "{{ env('FIREBASE_APP_ID') }}",
-        measurementId: "{{ env('FIREBASE_MEASUREMENT_ID') }}"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
+<script>
     const overlay = document.getElementById('loadingOverlay');
 
     function showLoading() {
         overlay.classList.add('active');
     }
 
-    window.loginWithGoogle = function() {
-        showLoading();
-        signInWithPopup(auth, provider)
-            .then((result) => {
-                const user = result.user;
-                
-                // Kirim data user ke Laravel untuk buat session
-                fetch("/auth/firebase-login", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        email: user.email,
-                        name: user.displayName,
-                        google_id: user.uid,
-                        redirect_to: new URLSearchParams(window.location.search).get('redirect_to')
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        window.location.href = data.redirect;
-                    } else {
-                        overlay.classList.remove('active');
-                        alert("Gagal sinkronisasi sesi Laravel.");
-                    }
-                })
-                .catch(err => {
-                    overlay.classList.remove('active');
-                    console.error("Fetch Error:", err);
-                    alert("Terjadi kesalahan koneksi ke server.");
-                });
-
-            }).catch((error) => {
-                overlay.classList.remove('active');
-                console.error("Error Login:", error.message);
-                alert("Gagal login Google: " + error.message);
-            });
-    }
-
     // Handle normal form submit loading
     document.querySelector('form').addEventListener('submit', function() {
+        showLoading();
+    });
+
+    // Provide a way for Google button to show loading too
+    document.querySelector('.btn-google').addEventListener('click', function() {
         showLoading();
     });
 
