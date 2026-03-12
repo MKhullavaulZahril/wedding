@@ -34,9 +34,9 @@ class FlowerController extends Controller
             'location' => $vendor->location ?? '',
             'price' => $vendor->price ?? '0',
             'about' => $vendor->about ?? '',
-            'features' => is_string($vendor->features) ? json_decode($vendor->features, true) : ($vendor->features ?? []),
-            'categories' => is_string($vendor->categories) ? json_decode($vendor->categories, true) : ($vendor->categories ?? []),
-            'testimonials' => is_string($vendor->testimonials) ? json_decode($vendor->testimonials, true) : ($vendor->testimonials ?? []),
+            'features' => collect($vendor->features)->toArray(),
+            'categories' => collect($vendor->categories)->toArray(),
+            'testimonials' => collect($vendor->testimonials)->toArray(),
             'main_image' => asset(ltrim($vendor->image ?? '', '/')),
             'image' => asset(ltrim($vendor->image ?? '', '/')),
             'owner' => [

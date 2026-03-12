@@ -20,8 +20,7 @@ class BookingController extends Controller
                 // Owner logic fix
                 $ownerName = is_string($venue->owner) ? $venue->owner : (isset($venue->owner['name']) ? $venue->owner['name'] : 'Unknown');
 
-                $gallery = is_string($venue->gallery) ? json_decode($venue->gallery, true) : ($venue->gallery ?? []);
-                if(!is_array($gallery)) $gallery = [];
+                $gallery = collect($venue->gallery)->toArray();
         
                 $booking = [
                     'item_name' => $venue->name,

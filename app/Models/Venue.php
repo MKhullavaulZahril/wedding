@@ -20,5 +20,6 @@ class Venue extends Model
 
     protected $casts = [
         'gallery' => 'array',
+        'features' => 'array',
     ];
 }

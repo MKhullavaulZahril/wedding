@@ -31,8 +31,7 @@ class VenueController extends Controller
     {
         $venue = Venue::findOrFail($id);
 
-        $gallery = is_string($venue->gallery) ? json_decode($venue->gallery, true) : ($venue->gallery ?? []);
-        if(!is_array($gallery)) $gallery = [];
+        $gallery = collect($venue->gallery)->toArray();
         
         $formattedGallery = array_map(function($img) {
             return asset(ltrim($img, '/'));
@@ -53,7 +52,7 @@ class VenueController extends Controller
             'location' => $venue->location,
             'price' => 'IDR ' . number_format((float)($venue->price ?? 0), 0, ',', '.'),
             'about' => $venue->about ?? '',
-            'features' => is_string($venue->features) ? json_decode($venue->features, true) : ($venue->features ?? []),
+            'features' => collect($venue->features)->toArray(),
             'gallery' => $formattedGallery,
             'image' => $mainImage,
             'owner' => [
