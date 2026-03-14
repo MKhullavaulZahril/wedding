@@ -10,10 +10,24 @@ class FlowerController extends Controller
     public function index(Request $request)
     {
         $category = $request->query('category');
+        $location = $request->query('location');
+        $keyword = $request->query('q');
+
         $query = Vendor::query();
 
         if ($category) {
             $query->where('type', 'like', '%' . $category . '%');
+        }
+
+        if ($location) {
+            $query->where('location', 'like', '%' . $location . '%');
+        }
+
+        if ($keyword) {
+            $query->where(function($q) use ($keyword) {
+                $q->where('name', 'like', '%' . $keyword . '%')
+                  ->orWhere('about', 'like', '%' . $keyword . '%');
+            });
         }
 
         $vendors = $query->latest('id')->paginate(20)->withQueryString();

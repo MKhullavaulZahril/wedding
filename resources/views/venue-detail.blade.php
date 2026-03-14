@@ -122,7 +122,11 @@
                     </div>
                     <div class="info-block">
                         <h3>Features</h3>
-                        <p>{{ $venue['features'] }}</p>
+                        @if(is_array($venue['features']))
+                            <p>{{ implode(', ', $venue['features']) }}</p>
+                        @else
+                            <p>{{ $venue['features'] }}</p>
+                        @endif
                     </div>
                 </div>
                 
@@ -234,5 +238,6 @@
             });
         });
     </script>
+    <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>

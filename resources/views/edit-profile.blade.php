@@ -225,5 +225,6 @@
     </script>
     <!-- Performance Optimization: Instant.page -->
     <script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZyxPjiipSbmfOOiyv9D41tqtGj73T9MToG+8m/N8eO0vHnF+mX402p99xUqS7B"></script>
+    <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>

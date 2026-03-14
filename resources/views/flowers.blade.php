@@ -62,7 +62,7 @@
             @auth
                 <li><p style="padding: 12px 28px; font-size: 0.8rem; color: #888; text-align: right;">{{ Auth::user()->name }}</p></li>
                 <li><a href="{{ route('orders') }}">Pemesanan Saya</a></li>
-                <li><a href="{{ route('logout') }}" class="danger" style="color: #c0445e;">Keluar</a></li>
+                <li><a href="{{ route('logout') }}" class="danger" style="color: #c0445e;" onclick="localStorage.removeItem('wo_cart')">Keluar</a></li>
             @else
                 <li><a href="{{ route('login') }}">Masuk</a></li>
                 <li><a href="{{ route('register') }}">Daftar</a></li>
@@ -103,6 +103,16 @@
 
     <main>
         <div class="sticky-controls" style="padding-top: 20px;">
+            <div class="search-container" style="margin-top: 10px;">
+        <form action="{{ route('flowers.index') }}" method="GET" class="search-box-inline">
+            <input type="hidden" name="category" value="{{ request('category') }}">
+            <input type="text" name="q" placeholder="Cari nama atau jasa vendor..." value="{{ request('q') }}">
+            <input type="text" name="location" placeholder="Lokasi..." value="{{ request('location') }}">
+            <button type="submit">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+        </form>
+    </div>
             <div class="search-container" style="margin-bottom: 20px;">
                 <div class="search-input">{{ request('date_start', date('Y-m-d')) }}</div>
                 <div class="search-input">{{ request('date_end', date('Y-m-d', strtotime('+1 day'))) }}</div>
@@ -170,7 +180,9 @@
             </div>
         </div>
     </main>
+    @auth
     <script src="{{ asset('js/cart.js') }}"></script>
+    @endauth
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Event delegation untuk kartu 
@@ -192,5 +204,6 @@
             });
         });
     </script>
+    <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>

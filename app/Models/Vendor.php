@@ -25,4 +25,9 @@ class Vendor extends Model
         'categories' => 'array',
         'testimonials' => 'array',
     ];
+
+    public function getImageAttribute($value)
+    {
+        return $value ? asset($value) : asset('images/placeholder-vendor.jpg');
+    }
 }

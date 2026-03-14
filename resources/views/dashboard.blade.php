@@ -71,12 +71,13 @@
         </div>
 
         <form id="searchForm" action="{{ route('venues.index') }}" method="GET">
+
             <!-- Kategori -->
             <div class="field">
                 <div class="field-label">Kategori</div>
                 <div class="select-wrap">
                     <select name="category" id="categorySelect">
-                        <option value="" disabled selected>Pilih Kategori</option>
+                        <option value="" selected>Semua Kategori</option>
                     </select>
                 </div>
             </div>
@@ -137,7 +138,7 @@
                 <li><a href="{{ route('saran') }}">Saran</a></li>
                 <li><a href="{{ route('studycase') }}">Study Case</a></li>
                 <li><a href="{{ route('profile.edit') }}">Privasi</a></li>
-                <li><a href="{{ route('logout') }}" class="danger" style="color: #c0445e;">Keluar</a></li>
+                <li><a href="{{ route('logout') }}" class="danger" style="color: #c0445e;" onclick="localStorage.removeItem('wo_cart')">Keluar</a></li>
             @else
                 <li><a href="{{ route('login') }}">Masuk</a></li>
                 <li><a href="{{ route('register') }}">Daftar</a></li>
@@ -147,7 +148,9 @@
     </div>
 </aside>
 
+@auth
 <script src="{{ asset('js/cart.js') }}"></script>
+@endauth
 <script>
     /* ── Sidebar ── */
     const leftSB  = document.getElementById('leftSidebar');
@@ -192,12 +195,12 @@
     ];
 
     function checkFields() {
-        const ok = categoryEl.value && dateStartEl.value && dateEndEl.value && locationEl.value.trim();
+        const ok = categoryEl.value || locationEl.value.trim();
         btnGo.disabled = !ok;
     }
 
     function setOptions(list) {
-        categoryEl.innerHTML = '<option value="" disabled selected>Pilih Kategori</option>';
+        categoryEl.innerHTML = '<option value="" selected>Semua Kategori</option>';
         list.forEach(({ value, label }) => {
             const o = document.createElement('option');
             o.value = value; o.textContent = label;
@@ -222,9 +225,9 @@
     });
 
     form.addEventListener('submit', e => {
-        if (!categoryEl.value || !dateStartEl.value || !dateEndEl.value || !locationEl.value.trim()) {
+        if (!categoryEl.value && !locationEl.value.trim()) {
             e.preventDefault();
-            alert('Harap isi semua field sebelum melanjutkan.');
+            alert('Harap isi setidaknya satu kriteria pencarian.');
         }
     });
 
@@ -235,5 +238,6 @@
     setOptions(venueOptions);
     checkFields();
 </script>
+    <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>

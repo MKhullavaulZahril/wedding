@@ -22,4 +22,9 @@ class Venue extends Model
         'gallery' => 'array',
         'features' => 'array',
     ];
+
+    public function getImageAttribute($value)
+    {
+        return $value ? asset($value) : asset('images/placeholder-venue.jpg');
+    }
 }

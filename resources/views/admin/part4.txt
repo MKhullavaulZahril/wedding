@@ -1,0 +1,807 @@
+            <!-- ── VENUE TAB ── -->
+            <div class="tab-panel" id="tab-venue">
+                <div class="section-header">
+                    <h2 class="section-title">Manajemen <em>Venue</em></h2>
+                    <div class="section-actions">
+                        <div class="search-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            <input type="text" class="search-input" placeholder="Cari venue…" oninput="filterCards(this, 'venueGrid')">
+                        </div>
+                        <button class="btn-add" onclick="openModal('modalVenue')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            <span>Tambah Venue</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="items-grid" id="venueGrid">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+
+            <!-- ── VENDOR TAB ── -->
+            <div class="tab-panel" id="tab-vendor">
+                <div class="section-header">
+                    <h2 class="section-title">Manajemen <em>Vendor</em></h2>
+                    <div class="section-actions">
+                        <div class="search-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            <input type="text" class="search-input" placeholder="Cari vendor…" oninput="filterCards(this, 'vendorGrid')">
+                        </div>
+                        <button class="btn-add" onclick="openModal('modalVendor')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            <span>Tambah Vendor</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="items-grid" id="vendorGrid">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+
+            <!-- ── PRICING TAB ── -->
+            <div class="tab-panel" id="tab-pricing">
+                <div class="section-header">
+                    <h2 class="section-title">Pengaturan <em>Harga</em></h2>
+                    <div class="section-actions">
+                        <button class="btn-add" onclick="openModal('modalPricing')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            <span>Tambah Paket Harga</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Venue Pricing -->
+                <div class="section-header" style="margin-top:0;margin-bottom:12px">
+                    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--muted);font-weight:400;letter-spacing:0.05em;">
+                        Harga <em style="font-style:italic;color:var(--gold-deep)">Venue</em>
+                    </h3>
+                </div>
+
+                <div class="pricing-table fade-in">
+                    <div class="pricing-table-header">
+                        <th>Nama Venue</th>
+                        <th>Kapasitas</th>
+                        <th>Harga Dasar</th>
+                        <th>Diskon</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </div>
+                    <div id="venuePricingRows">
+                        <!-- populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Vendor Pricing -->
+                <div class="section-header" style="margin-top:28px;margin-bottom:12px">
+                    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--muted);font-weight:400;letter-spacing:0.05em;">
+                        Harga <em style="font-style:italic;color:var(--rose)">Vendor</em>
+                    </h3>
+                </div>
+
+                <div class="pricing-table fade-in">
+                    <div class="pricing-table-header">
+                        <th>Nama Vendor</th>
+                        <th>Kategori</th>
+                        <th>Harga Dasar</th>
+                        <th>Diskon</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </div>
+                    <div id="vendorPricingRows">
+                        <!-- populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── ORDERS TAB ── -->
+            <div class="tab-panel" id="tab-orders">
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    <h3>Modul Pesanan</h3>
+                    <p>Halaman ini sedang dalam pengembangan.<br>Segera hadir.</p>
+                </div>
+            </div>
+
+            <!-- ── USERS TAB ── -->
+            <div class="tab-panel" id="tab-users">
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <h3>Manajemen Pengguna</h3>
+                    <p>Halaman ini sedang dalam pengembangan.<br>Segera hadir.</p>
+                </div>
+            </div>
+
+        </div><!-- /content -->
+    </main>
+</div><!-- /app -->
+
+
+<!-- ════════════════════ MODAL VENUE ════════════════════ -->
+<div class="modal-backdrop" id="modalVenue">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalVenueTitle">Tambah <em>Venue</em></h2>
+            <button class="modal-close" onclick="closeModal('modalVenue')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Nama Venue</label>
+                    <input type="text" class="form-control" placeholder="cth. Grand Ballroom Surabaya" id="venueNameInput">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kategori</label>
+                    <select class="form-control">
+                        <option value="">Pilih kategori…</option>
+                        <option>Ballroom</option>
+                        <option>Garden / Outdoor</option>
+                        <option>Beach / Waterfront</option>
+                        <option>Hotel</option>
+                        <option>Villa</option>
+                        <option>Gedung Serbaguna</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Deskripsi</label>
+                <textarea class="form-control" placeholder="Deskripsikan venue secara singkat dan menarik…"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Kapasitas (Pax)</label>
+                    <input type="number" class="form-control" placeholder="cth. 500">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kota / Lokasi</label>
+                    <input type="text" class="form-control" placeholder="cth. Surabaya, Jawa Timur">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Harga Dasar (Rp)</label>
+                    <div class="input-prefix-wrap">
+                        <div class="input-prefix">Rp</div>
+                        <input type="number" placeholder="0" id="venuePriceInput">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Diskon (%)</label>
+                    <input type="number" class="form-control" placeholder="0" min="0" max="100">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Fasilitas</label>
+                <input type="text" class="form-control" placeholder="cth. AC, Parkir, Catering, Sound System (pisahkan dengan koma)">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Foto Venue</label>
+                <div class="upload-zone" id="venueUploadZone" onclick="document.getElementById('venueFileInput').click()">
+                    <input type="file" id="venueFileInput" multiple accept="image/*" style="display:none" onchange="handleFileUpload(this, 'venuePreviewGrid')">
+                    <div class="upload-zone-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                    </div>
+                    <div class="upload-zone-title">Unggah Foto Venue</div>
+                    <div class="upload-zone-sub">Klik atau seret file ke sini · JPG, PNG · Maks. 5MB</div>
+                </div>
+                <div class="img-preview-grid" id="venuePreviewGrid"></div>
+            </div>
+            <div class="form-group">
+                <div class="toggle-wrap">
+                    <span class="toggle-label">Tampilkan sebagai <strong>Featured</strong></span>
+                    <label class="toggle">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="toggle-wrap">
+                    <span class="toggle-label">Status <strong>Aktif</strong> (terlihat oleh pengguna)</span>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-xs" onclick="closeModal('modalVenue')">Batal</button>
+            <button class="btn-xs primary" onclick="saveVenue()">Simpan Venue</button>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════ MODAL VENDOR ════════════════════ -->
+<div class="modal-backdrop" id="modalVendor">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalVendorTitle">Tambah <em>Vendor</em></h2>
+            <button class="modal-close" onclick="closeModal('modalVendor')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Nama Vendor / Usaha</label>
+                    <input type="text" class="form-control" placeholder="cth. Elegance Photography Studio" id="vendorNameInput">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kategori Layanan</label>
+                    <select class="form-control">
+                        <option value="">Pilih kategori…</option>
+                        <option>Fotografer</option>
+                        <option>Videografer</option>
+                        <option>Katering</option>
+                        <option>Dekorasi & Florist</option>
+                        <option>Makeup Artist</option>
+                        <option>MC & Entertainment</option>
+                        <option>Busana Pengantin</option>
+                        <option>Undangan & Souvenir</option>
+                        <option>Wedding Organizer</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Deskripsi Layanan</label>
+                <textarea class="form-control" placeholder="Ceritakan keunggulan layanan vendor ini…"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Kontak / WhatsApp</label>
+                    <input type="text" class="form-control" placeholder="cth. 08123456789">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kota Operasional</label>
+                    <input type="text" class="form-control" placeholder="cth. Surabaya">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Harga Mulai Dari (Rp)</label>
+                    <div class="input-prefix-wrap">
+                        <div class="input-prefix">Rp</div>
+                        <input type="number" placeholder="0" id="vendorPriceInput">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Diskon (%)</label>
+                    <input type="number" class="form-control" placeholder="0" min="0" max="100">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Paket Layanan</label>
+                <input type="text" class="form-control" placeholder="cth. Paket Silver, Paket Gold, Paket Platinum (pisahkan koma)">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Portofolio / Foto Layanan</label>
+                <div class="upload-zone" onclick="document.getElementById('vendorFileInput').click()">
+                    <input type="file" id="vendorFileInput" multiple accept="image/*" style="display:none" onchange="handleFileUpload(this, 'vendorPreviewGrid')">
+                    <div class="upload-zone-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                    </div>
+                    <div class="upload-zone-title">Unggah Portofolio</div>
+                    <div class="upload-zone-sub">Klik atau seret file ke sini · JPG, PNG · Maks. 5MB</div>
+                </div>
+                <div class="img-preview-grid" id="vendorPreviewGrid"></div>
+            </div>
+            <div class="form-group">
+                <div class="toggle-wrap">
+                    <span class="toggle-label">Tampilkan sebagai <strong>Featured</strong></span>
+                    <label class="toggle">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="toggle-wrap">
+                    <span class="toggle-label">Status <strong>Aktif</strong> (terlihat oleh pengguna)</span>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-xs" onclick="closeModal('modalVendor')">Batal</button>
+            <button class="btn-xs primary" onclick="saveVendor()">Simpan Vendor</button>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════ MODAL PRICING ════════════════════ -->
+<div class="modal-backdrop" id="modalPricing">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title">Tambah <em>Paket Harga</em></h2>
+            <button class="modal-close" onclick="closeModal('modalPricing')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label">Tipe</label>
+                <select class="form-control">
+                    <option>Venue</option>
+                    <option>Vendor</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Pilih Item</label>
+                <select class="form-control">
+                    <option>Grand Ballroom Surabaya</option>
+                    <option>The Ritz Garden</option>
+                    <option>Elegance Photography</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nama Paket</label>
+                <input type="text" class="form-control" placeholder="cth. Paket Hari Kerja, Paket Akhir Pekan">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Harga (Rp)</label>
+                    <div class="input-prefix-wrap">
+                        <div class="input-prefix">Rp</div>
+                        <input type="number" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Diskon (%)</label>
+                    <input type="number" class="form-control" placeholder="0" min="0" max="100">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Berlaku Hingga</label>
+                <input type="date" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Catatan</label>
+                <textarea class="form-control" placeholder="Syarat dan ketentuan harga…" style="min-height:70px"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-xs" onclick="closeModal('modalPricing')">Batal</button>
+            <button class="btn-xs primary" onclick="showToast('Paket harga berhasil disimpan', 'success'); closeModal('modalPricing')">Simpan Paket</button>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════ MODAL DELETE CONFIRM ════════════════════ -->
+<div class="modal-backdrop" id="modalDelete">
+    <div class="modal modal-sm">
+        <div class="modal-body" style="text-align:center;padding:36px 28px">
+            <div class="confirm-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6"/><path d="M14 11v6"/>
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                </svg>
+            </div>
+            <div class="confirm-title">Hapus <span id="deleteItemName">item</span>?</div>
+            <p class="confirm-desc">Tindakan ini tidak dapat dibatalkan.<br>Data akan dihapus secara permanen.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-xs" onclick="closeModal('modalDelete')">Batal</button>
+            <button class="btn-xs danger" onclick="confirmDelete()">Ya, Hapus</button>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════ TOAST ════════════════════ -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ═══════════════════════════════════════
+   DATA
+═══════════════════════════════════════ */
+const VENUE_IMAGES = [
+    'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=600&q=75&auto=format',
+    'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&q=75&auto=format',
+    'https://images.unsplash.com/photo-1531058020387-3be344556be6?w=600&q=75&auto=format',
+    'https://images.unsplash.com/photo-1578922746465-3a80a228f223?w=600&q=75&auto=format',
+    'https://images.unsplash.com/photo-1606216840988-92fd20e0d6a0?w=600&q=75&auto=format',
+];
+
+const VENDOR_IMAGES = [
+    'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&q=75&auto=format',
+    'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=75&auto=format',
+    'https://images.unsplash.com/photo-1529636444744-adffc9135a5e?w=600&q=75&auto=format',
+    'https://images.unsplash.com/photo-1481214110143-ed630356e1bb?w=600&q=75&auto=format',
+];
+
+let venues = [
+    { id:1, name:'Grand Ballroom Surabaya', category:'Ballroom', desc:'Ballroom mewah dengan kapasitas besar, cocok untuk resepsi megah di jantung kota Surabaya.', price:45000000, discount:10, capacity:800, city:'Surabaya', img:VENUE_IMAGES[0], photos:3, status:'active', featured:true },
+    { id:2, name:'The Ritz Garden', category:'Garden / Outdoor', desc:'Taman romantis dengan pemandangan alam hijau, suasana elegan untuk pernikahan outdoor impian.', price:28000000, discount:0, capacity:400, city:'Malang', img:VENUE_IMAGES[1], photos:5, status:'active', featured:false },
+    { id:3, name:'Azure Beach Resort', category:'Beach / Waterfront', desc:'Venue tepi pantai eksklusif dengan sunset view yang memukau untuk hari spesial Anda.', price:65000000, discount:15, capacity:300, city:'Bali', img:VENUE_IMAGES[2], photos:7, status:'active', featured:true },
+    { id:4, name:'Sapphire Convention', category:'Hotel', desc:'Ruang konvensi bintang lima dengan fasilitas lengkap dan pelayanan premium kelas dunia.', price:55000000, discount:5, capacity:1000, city:'Jakarta', img:VENUE_IMAGES[3], photos:4, status:'inactive', featured:false },
+    { id:5, name:'La Villa Puncak', category:'Villa', desc:'Villa eksklusif di perbukitan dengan udara sejuk dan pemandangan alam yang menakjubkan.', price:38000000, discount:0, capacity:200, city:'Puncak', img:VENUE_IMAGES[4], photos:6, status:'active', featured:false },
+];
+
+let vendors = [
+    { id:1, name:'Elegance Photography', category:'Fotografer', desc:'Spesialis wedding photography dengan gaya editorial modern, dokumentasikan momen terbaik Anda.', price:8500000, discount:0, city:'Surabaya', img:VENDOR_IMAGES[0], photos:12, status:'active', featured:true },
+    { id:2, name:'Bloom & Co. Florist', category:'Dekorasi & Florist', desc:'Dekorasi bunga premium untuk setiap sudut resepsi, dari pelaminan hingga meja tamu.', price:15000000, discount:10, city:'Jakarta', img:VENDOR_IMAGES[1], photos:8, status:'active', featured:false },
+    { id:3, name:'Rasa Nusantara Catering', category:'Katering', desc:'Sajian kuliner autentik Indonesia dengan standar higienis tinggi, melayani hingga 2000 tamu.', price:75000, discount:5, city:'Surabaya', img:VENDOR_IMAGES[2], photos:5, status:'active', featured:true },
+    { id:4, name:'Aura Bridal MUA', category:'Makeup Artist', desc:'Makeup artist berpengalaman dengan sentuhan modern, tampil memukau di hari pernikahan Anda.', price:3500000, discount:0, city:'Malang', img:VENDOR_IMAGES[3], photos:9, status:'inactive', featured:false },
+];
+
+let deleteTarget = null;
+
+/* ═══════════════════════════════════════
+   TAB NAVIGATION
+═══════════════════════════════════════ */
+const pageTitles = {
+    dashboard: 'Dashboard <em>Overview</em>',
+    venue:     'Manajemen <em>Venue</em>',
+    vendor:    'Manajemen <em>Vendor</em>',
+    pricing:   'Pengaturan <em>Harga</em>',
+    orders:    'Daftar <em>Pesanan</em>',
+    users:     'Manajemen <em>Pengguna</em>',
+};
+
+function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    if (btn) btn.classList.add('active');
+    document.getElementById('pageTitle').innerHTML = pageTitles[tab] || tab;
+
+    if (tab === 'venue' || tab === 'dashboard') renderVenueGrid();
+    if (tab === 'vendor') renderVendorGrid();
+    if (tab === 'pricing') renderPricingTables();
+}
+
+function openAddModal() {
+    const active = document.querySelector('.tab-panel.active').id;
+    if (active === 'tab-venue')   openModal('modalVenue');
+    else if (active === 'tab-vendor')  openModal('modalVendor');
+    else if (active === 'tab-pricing') openModal('modalPricing');
+    else openModal('modalVenue');
+}
+
+/* ═══════════════════════════════════════
+   RENDER CARDS
+═══════════════════════════════════════ */
+function fmtPrice(n) {
+    if (n >= 1000000) return 'Rp ' + (n/1000000).toFixed(0) + 'jt';
+    if (n >= 1000)    return 'Rp ' + (n/1000).toFixed(0) + 'rb';
+    return 'Rp ' + n.toLocaleString('id-ID');
+}
+
+function fmtFull(n) {
+    return 'Rp ' + n.toLocaleString('id-ID');
+}
+
+function statusBadge(s) {
+    const map = { active:'badge-active', inactive:'badge-inactive', featured:'badge-featured' };
+    const label = { active:'Aktif', inactive:'Nonaktif', featured:'Featured' };
+    return `<span class="pricing-badge ${map[s]}">${label[s]}</span>`;
+}
+
+function statusDot(item) {
+    const dot = item.featured ? 'featured' : item.status;
+    const label = item.featured ? 'Featured' : (item.status === 'active' ? 'Aktif' : 'Nonaktif');
+    return `<div class="item-card-status"><div class="status-dot ${dot}"></div><span style="font-size:0.6rem;color:var(--muted-lt)">${label}</span></div>`;
+}
+
+function venueCard(v) {
+    const finalPrice = v.price * (1 - v.discount/100);
+    return `
+    <div class="item-card" data-name="${v.name.toLowerCase()}">
+        <div class="item-card-img-wrap">
+            <img src="${v.img}" alt="${v.name}" loading="lazy">
+            <div class="item-card-img-count">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                ${v.photos} foto
+            </div>
+        </div>
+        <div class="item-card-body">
+            <div class="item-card-category">${v.category} · ${v.city}</div>
+            <div class="item-card-name">${v.name}</div>
+            <div class="item-card-desc">${v.desc}</div>
+            <div class="item-card-price">
+                ${fmtPrice(finalPrice)} <span>/ sesi · Kap. ${v.capacity} pax</span>
+                ${v.discount > 0 ? `<span style="color:var(--rose);font-family:'Jost',sans-serif;font-size:0.68rem;margin-left:6px;background:rgba(176,84,104,0.08);padding:2px 6px;border-radius:4px">-${v.discount}%</span>` : ''}
+            </div>
+            <div class="item-card-footer">
+                <button class="btn-icon" onclick="editVenue(${v.id})">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Edit
+                </button>
+                <button class="btn-icon" onclick="manageImages(${v.id}, 'venue')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    Foto
+                </button>
+                <button class="btn-icon danger" onclick="openDelete('venue', ${v.id}, '${v.name}')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                    Hapus
+                </button>
+                ${statusDot(v)}
+            </div>
+        </div>
+    </div>`;
+}
+
+function vendorCard(v) {
+    const unit = v.category === 'Katering' ? '/pax' : '/layanan';
+    return `
+    <div class="item-card" data-name="${v.name.toLowerCase()}">
+        <div class="item-card-img-wrap">
+            <img src="${v.img}" alt="${v.name}" loading="lazy">
+            <div class="item-card-img-count">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                ${v.photos} foto
+            </div>
+        </div>
+        <div class="item-card-body">
+            <div class="item-card-category">${v.category} · ${v.city}</div>
+            <div class="item-card-name">${v.name}</div>
+            <div class="item-card-desc">${v.desc}</div>
+            <div class="item-card-price">
+                Mulai ${fmtPrice(v.price)} <span>${unit}</span>
+                ${v.discount > 0 ? `<span style="color:var(--rose);font-family:'Jost',sans-serif;font-size:0.68rem;margin-left:6px;background:rgba(176,84,104,0.08);padding:2px 6px;border-radius:4px">-${v.discount}%</span>` : ''}
+            </div>
+            <div class="item-card-footer">
+                <button class="btn-icon" onclick="editVendor(${v.id})">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Edit
+                </button>
+                <button class="btn-icon" onclick="manageImages(${v.id}, 'vendor')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    Foto
+                </button>
+                <button class="btn-icon danger" onclick="openDelete('vendor', ${v.id}, '${v.name}')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                    Hapus
+                </button>
+                ${statusDot(v)}
+            </div>
+        </div>
+    </div>`;
+}
+
+function renderVenueGrid() {
+    const el = document.getElementById('venueGrid');
+    if (el) el.innerHTML = venues.map(venueCard).join('');
+    const dash = document.getElementById('dashVenueGrid');
+    if (dash) dash.innerHTML = venues.slice(0,3).map(venueCard).join('');
+}
+
+function renderVendorGrid() {
+    const el = document.getElementById('vendorGrid');
+    if (el) el.innerHTML = vendors.map(vendorCard).join('');
+}
+
+function renderPricingTables() {
+    document.getElementById('venuePricingRows').innerHTML = venues.map(v => {
+        const final = v.price * (1 - v.discount/100);
+        return `
+        <div class="pricing-row">
+            <td>${v.name}</td>
+            <td>${v.capacity} pax</td>
+            <td class="pricing-price" id="vp-${v.id}">${fmtFull(v.price)}</td>
+            <td>${v.discount > 0 ? `<span style="color:var(--rose);font-weight:500">${v.discount}%</span>` : '—'}</td>
+            <td>${statusBadge(v.featured ? 'featured' : v.status)}</td>
+            <td>
+                <div class="pricing-actions">
+                    <button class="btn-xs" onclick="inlineEditPrice('v', ${v.id})">Edit Harga</button>
+                    <button class="btn-xs danger" onclick="openDelete('venue', ${v.id}, '${v.name}')">Hapus</button>
+                </div>
+            </td>
+        </div>`;
+    }).join('');
+
+    document.getElementById('vendorPricingRows').innerHTML = vendors.map(v => `
+        <div class="pricing-row">
+            <td>${v.name}</td>
+            <td>${v.category}</td>
+            <td class="pricing-price" id="vdp-${v.id}">${fmtFull(v.price)}</td>
+            <td>${v.discount > 0 ? `<span style="color:var(--rose);font-weight:500">${v.discount}%</span>` : '—'}</td>
+            <td>${statusBadge(v.featured ? 'featured' : v.status)}</td>
+            <td>
+                <div class="pricing-actions">
+                    <button class="btn-xs" onclick="inlineEditPrice('vd', ${v.id})">Edit Harga</button>
+                    <button class="btn-xs danger" onclick="openDelete('vendor', ${v.id}, '${v.name}')">Hapus</button>
+                </div>
+            </td>
+        </div>
+    `).join('');
+}
+
+/* ═══════════════════════════════════════
+   INLINE PRICE EDIT
+═══════════════════════════════════════ */
+function inlineEditPrice(type, id) {
+    const elId = (type === 'v' ? 'vp-' : 'vdp-') + id;
+    const cell = document.getElementById(elId);
+    const arr  = type === 'v' ? venues : vendors;
+    const item = arr.find(x => x.id === id);
+    if (!item) return;
+
+    cell.innerHTML = `
+        <div style="display:flex;gap:6px;align-items:center">
+            <input class="price-input" type="number" value="${item.price}" id="pricefield-${id}">
+            <button class="btn-xs primary" onclick="saveInlinePrice('${type}', ${id})">✓</button>
+        </div>`;
+    document.getElementById('pricefield-' + id).focus();
+}
+
+function saveInlinePrice(type, id) {
+    const val = parseInt(document.getElementById('pricefield-' + id).value, 10);
+    const arr = type === 'v' ? venues : vendors;
+    const item = arr.find(x => x.id === id);
+    if (item && val > 0) {
+        item.price = val;
+        showToast(`Harga "${item.name}" berhasil diperbarui`, 'success');
+    }
+    renderPricingTables();
+}
+
+/* ═══════════════════════════════════════
+   MODAL
+═══════════════════════════════════════ */
+function openModal(id) {
+    document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+}
+
+document.querySelectorAll('.modal-backdrop').forEach(b => {
+    b.addEventListener('click', e => {
+        if (e.target === b) b.classList.remove('open');
+    });
+});
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.querySelectorAll('.modal-backdrop.open').forEach(b => b.classList.remove('open'));
+});
+
+/* ═══════════════════════════════════════
+   EDIT / DELETE
+═══════════════════════════════════════ */
+function editVenue(id) {
+    const v = venues.find(x => x.id === id);
+    if (!v) return;
+    document.getElementById('modalVenueTitle').innerHTML = `Edit <em>Venue</em>`;
+    document.getElementById('venueNameInput').value  = v.name;
+    document.getElementById('venuePriceInput').value = v.price;
+    openModal('modalVenue');
+}
+
+function editVendor(id) {
+    const v = vendors.find(x => x.id === id);
+    if (!v) return;
+    document.getElementById('modalVendorTitle').innerHTML = `Edit <em>Vendor</em>`;
+    document.getElementById('vendorNameInput').value  = v.name;
+    document.getElementById('vendorPriceInput').value = v.price;
+    openModal('modalVendor');
+}
+
+function manageImages(id, type) {
+    const arr = type === 'venue' ? venues : vendors;
+    const item = arr.find(x => x.id === id);
+    if (!item) return;
+    if (type === 'venue') { document.getElementById('modalVenueTitle').innerHTML = `Kelola Foto <em>${item.name}</em>`; openModal('modalVenue'); }
+    else { document.getElementById('modalVendorTitle').innerHTML = `Kelola Foto <em>${item.name}</em>`; openModal('modalVendor'); }
+}
+
+function openDelete(type, id, name) {
+    deleteTarget = { type, id };
+    document.getElementById('deleteItemName').textContent = `"${name}"`;
+    openModal('modalDelete');
+}
+
+function confirmDelete() {
+    if (!deleteTarget) return;
+    if (deleteTarget.type === 'venue')  venues  = venues.filter(v => v.id !== deleteTarget.id);
+    if (deleteTarget.type === 'vendor') vendors = vendors.filter(v => v.id !== deleteTarget.id);
+    closeModal('modalDelete');
+    renderVenueGrid();
+    renderVendorGrid();
+    renderPricingTables();
+    showToast('Item berhasil dihapus', 'danger');
+    deleteTarget = null;
+}
+
+/* ═══════════════════════════════════════
+   SAVE (mock)
+═══════════════════════════════════════ */
+function saveVenue() {
+    const name  = document.getElementById('venueNameInput').value.trim();
+    const price = parseInt(document.getElementById('venuePriceInput').value, 10) || 0;
+    if (!name) { showToast('Nama venue wajib diisi', 'danger'); return; }
+    venues.unshift({ id: Date.now(), name, category:'Ballroom', desc:'Venue baru ditambahkan oleh admin.', price, discount:0, capacity:500, city:'Indonesia', img:VENUE_IMAGES[0], photos:0, status:'active', featured:false });
+    closeModal('modalVenue');
+    renderVenueGrid();
+    showToast(`Venue "${name}" berhasil disimpan`, 'success');
+}
+
+function saveVendor() {
+    const name  = document.getElementById('vendorNameInput').value.trim();
+    const price = parseInt(document.getElementById('vendorPriceInput').value, 10) || 0;
+    if (!name) { showToast('Nama vendor wajib diisi', 'danger'); return; }
+    vendors.unshift({ id: Date.now(), name, category:'Fotografer', desc:'Vendor baru ditambahkan oleh admin.', price, discount:0, city:'Indonesia', img:VENDOR_IMAGES[0], photos:0, status:'active', featured:false });
+    closeModal('modalVendor');
+    renderVendorGrid();
+    showToast(`Vendor "${name}" berhasil disimpan`, 'success');
+}
+
+/* ═══════════════════════════════════════
+   IMAGE UPLOAD PREVIEW
+═══════════════════════════════════════ */
+function handleFileUpload(input, gridId) {
+    const grid = document.getElementById(gridId);
+    const files = Array.from(input.files);
+    files.forEach((file, i) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const div = document.createElement('div');
+            div.className = 'img-preview-item';
+            div.innerHTML = `
+                <img src="${e.target.result}" alt="preview">
+                ${grid.children.length === 0 && i === 0 ? '<div class="img-preview-main-badge">Utama</div>' : ''}
+                <button class="img-preview-remove" onclick="this.closest('.img-preview-item').remove()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>`;
+            grid.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+/* ═══════════════════════════════════════
+   SEARCH FILTER
+═══════════════════════════════════════ */
+function filterCards(input, gridId) {
+    const q = input.value.toLowerCase();
+    document.querySelectorAll(`#${gridId} .item-card`).forEach(card => {
+        card.style.display = card.dataset.name.includes(q) ? '' : 'none';
+    });
+}
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+function showToast(msg, type = 'success') {
+    const wrap = document.getElementById('toastWrap');
+    const icons = {
+        success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+        danger:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    };
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.innerHTML = `${icons[type] || ''}<span>${msg}</span>`;
+    wrap.appendChild(t);
+    setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(20px)'; t.style.transition='all 0.3s'; setTimeout(() => t.remove(), 300); }, 3000);
+}
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+renderVenueGrid();
+</script>
+
+</body>
+</html>

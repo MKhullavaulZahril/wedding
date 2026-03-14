@@ -40,21 +40,43 @@
         </ul>
     </aside>
 
-    <!-- ══ CURVED HEADER ══════════════════════════════════ -->
-    <header class="curved-header">
-        <div class="header-nav">
-            <a href="{{ route('dashboard') }}" class="nav-circle-btn" id="toggleLeft">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            </a>
+    <!-- ══ STICKY TOP SECTION ══════════════════════════════════ -->
+    <div class="sticky-top-container">
+        <header class="curved-header">
+            <div class="header-nav">
+                <a href="{{ route('dashboard') }}" class="nav-circle-btn" id="toggleLeft">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </a>
 
-            <div class="nav-menu-btn" id="toggleRight">
-                <span></span><span></span><span></span>
+                <div class="nav-menu-btn" id="toggleRight">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+            <h1 class="page-title" style="margin-bottom: 10px;">Pemesanan Saya</h1>
+        </header>
+
+        <div class="search-area-wrap">
+            <div class="orders-container-mini">
+                <div class="search-bar-wrap">
+                    <form action="{{ route('orders') }}" method="GET" class="order-search-form">
+                        <div class="search-input-group">
+                            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" name="q" placeholder="Cari ID Pesanan atau Nama Venue..." value="{{ request('q') }}">
+                        </div>
+                        <button type="submit" class="btn-search">Cari</button>
+                    </form>
+                </div>
+            </div>
+            <div class="order-filters">
+                <a href="{{ route('orders', ['type' => 'all', 'q' => request('q')]) }}" class="filter-pill {{ request('type', 'all') == 'all' ? 'active' : '' }}">Semua</a>
+                <a href="{{ route('orders', ['type' => 'venue', 'q' => request('q')]) }}" class="filter-pill {{ request('type') == 'venue' ? 'active' : '' }}">Gedung</a>
+                <a href="{{ route('orders', ['type' => 'flower', 'q' => request('q')]) }}" class="filter-pill {{ request('type') == 'flower' ? 'active' : '' }}">Vendor</a>
             </div>
         </div>
-        <h1 class="page-title">Pemesanan Saya</h1>
-    </header>
+    </div>
 
     <main class="orders-container">
+
         @if(count($orders) > 0)
             <div class="orders-list">
                 @foreach($orders as $order)
@@ -135,5 +157,6 @@
 
     <!-- Performance Optimization: Instant.page -->
     <script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZyxPjiipSbmfOOiyv9D41tqtGj73T9MToG+8m/N8eO0vHnF+mX402p99xUqS7B"></script>
+    <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>

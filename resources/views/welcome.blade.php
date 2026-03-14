@@ -87,38 +87,43 @@
                 <a href="{{ route('dashboard') }}" class="text-rose font-bold text-sm tracking-widest uppercase hover:underline">Lihat Semua</a>
             </div>
             
+            @if(isset($featuredVenue))
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4 h-[600px]">
                 <!-- Large Image (Left) -->
-                <div class="md:col-span-7 relative overflow-hidden rounded-3xl group">
-                    <img src="{{ asset('images/venues/Taman/Bumi Samami.webp') }}" alt="Venue Outdoor" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                <a href="{{ route('venues.show', $featuredVenue->id) }}" class="md:col-span-7 relative overflow-hidden rounded-3xl group block">
+                    <img src="{{ Str::startsWith($featuredVenue->image, 'http') ? $featuredVenue->image : asset($featuredVenue->image) }}" alt="{{ $featuredVenue->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
                         <div>
                             <span class="bg-rose text-white text-[10px] px-3 py-1 rounded-full uppercase font-bold tracking-widest mb-2 inline-block">Venue Utama</span>
-                            <h3 class="text-white text-2xl font-bold">Bumi Samami - Garden Party</h3>
+                            <h3 class="text-white text-2xl font-bold">{{ $featuredVenue->name }}</h3>
                         </div>
                     </div>
-                </div>
+                </a>
                 
                 <!-- Small Images (Right Grid) -->
                 <div class="md:col-span-5 grid grid-cols-2 gap-4 h-full">
-                    <div class="relative overflow-hidden rounded-2xl group">
-                        <img src="{{ asset('images/venues/Ballroom/Gedung Sampoerna Strategic Square.jpg') }}" alt="Ballroom" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
-                    </div>
-                    <div class="relative overflow-hidden rounded-2xl group">
-                        <img src="{{ asset('images/venues/Ballroom/Lippo-Kuningan-Grand-Ballroom.webp') }}" alt="Grand Ballroom" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
-                    </div>
-                    <div class="relative overflow-hidden rounded-2xl group">
-                        <img src="{{ asset('images/venues/Taman/Gunung Pancar.webp') }}" alt="Outdoor" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
-                    </div>
-                    <div class="relative overflow-hidden rounded-2xl group">
-                        <img src="{{ asset('images/venues/Ballroom/Pati-Unus-Hall.webp') }}" alt="Hall" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
-                    </div>
+                    @foreach($recentItems as $item)
+                        @php 
+                            $isVenue = class_basename($item) === 'Venue'; 
+                            $routeUrl = $isVenue ? route('venues.show', $item->id) : route('flowers.show', $item->id);
+                        @endphp
+                        <a href="{{ $routeUrl }}" class="relative overflow-hidden rounded-2xl group block">
+                            <img src="{{ Str::startsWith($item->image, 'http') ? $item->image : asset($item->image) }}" alt="{{ $item->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                                <h4 class="text-white text-sm font-bold truncate drop-shadow-md">{{ $item->name }}</h4>
+                            </div>
+                        </a>
+                    @endforeach
                 </div>
             </div>
+            @else
+            <!-- Fallback Jika Database Kosong -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 h-[600px]">
+                <div class="md:col-span-12 flex items-center justify-center bg-gray-100 rounded-3xl">
+                    <p class="text-muted">Belum ada inspirasi venue yang ditambahkan.</p>
+                </div>
+            </div>
+            @endif
         </div>
     </section>
 
@@ -235,5 +240,6 @@
         </div>
     </footer>
 
+    <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>

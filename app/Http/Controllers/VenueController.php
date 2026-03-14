@@ -13,10 +13,24 @@ class VenueController extends Controller
     public function index(Request $request)
     {
         $category = $request->query('category');
+        $location = $request->query('location');
+        $keyword = $request->query('q');
+
         $query = Venue::query();
 
         if ($category) {
             $query->where('category', 'like', '%' . $category . '%');
+        }
+
+        if ($location) {
+            $query->where('location', 'like', '%' . $location . '%');
+        }
+
+        if ($keyword) {
+            $query->where(function($q) use ($keyword) {
+                $q->where('name', 'like', '%' . $keyword . '%')
+                  ->orWhere('about', 'like', '%' . $keyword . '%');
+            });
         }
 
         $venues = $query->latest('id')->paginate(20)->withQueryString();

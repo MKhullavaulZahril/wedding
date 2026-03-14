@@ -79,12 +79,37 @@ class BookingController extends Controller
     }
 
     /**
+     * Tampilkan halaman checkout untuk seluruh isi keranjang.
+     */
+    public function checkoutCart()
+    {
+        // View ini akan membaca data langsung dari localStorage via JS
+        return view('checkout-cart');
+    }
+
+    /**
      * Tampilkan riwayat pemesanan pengguna dari MySQL.
      */
-    public function orders()
+    public function orders(Request $request)
     {
         $userId = auth()->id();
-        $myBookings = Booking::where('user_id', $userId)->latest()->get();
+        $search = $request->query('q');
+        $type = $request->query('type', 'all');
+        
+        $query = Booking::where('user_id', $userId);
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('id', 'like', '%' . $search . '%')
+                  ->orWhere('booking_details', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($type !== 'all') {
+            $query->where('item_type', $type);
+        }
+
+        $myBookings = $query->latest()->get();
 
         $orders = [];
         foreach ($myBookings as $booking) {
@@ -110,31 +135,6 @@ class BookingController extends Controller
             ];
         }
 
-        // Demo data if empty
-        if (empty($orders)) {
-            // Ambil 3 venue pertama dari Database MySQL untuk demo
-            $venues = Venue::take(3)->get();
-            
-            $statuses = [
-                ['text' => 'Selesai', 'class' => 'status-success'],
-                ['text' => 'Diproses', 'class' => 'status-warning'],
-                ['text' => 'Menunggu Pembayaran', 'class' => 'status-danger'],
-            ];
-
-            foreach ($venues as $index => $venue) {
-                $orders[] = [
-                    'id' => 'ORD-00' . ($index + 1),
-                    'venue_name' => $venue->name,
-                    'venue_id' => $venue->id,
-                    'location' => $venue->location,
-                    'date' => (24 + $index) . ' Feb 2026',
-                    'total_price' => 'IDR ' . number_format((float)($venue->price ?? 0), 0, ',', '.'),
-                    'status' => $statuses[$index]['text'],
-                    'status_class' => $statuses[$index]['class'],
-                    'image' => asset($venue->image ?? '')
-                ];
-            }
-        }
 
         return view('orders', compact('orders'));
     }
@@ -147,6 +147,35 @@ class BookingController extends Controller
         $userId = auth()->id();
         
         try {
+            // Cek apakah ini pembayaran massal dari keranjang
+            if ($request->has('cart_items')) {
+                $cartItems = $request->cart_items; // Array of items
+                
+                foreach ($cartItems as $item) {
+                    Booking::create([
+                        'user_id' => $userId,
+                        'item_type' => $item['type'] ?? 'venue',
+                        'item_id' => $item['id'] ?? '0',
+                        'status' => 'Selesai',
+                        'total_price' => $item['price_numeric'] ?? 0,
+                        'booking_details' => [
+                            'item_name' => $item['name'] ?? 'Wedding Service',
+                            'image' => $item['image'] ?? '',
+                            'location' => $item['location'] ?? '',
+                            'payment_method' => $request->payment_method ?? 'Card',
+                            'guest_name' => $request->guest_name,
+                            'guest_email' => $request->guest_email,
+                            'guest_phone' => $request->guest_phone,
+                            'guest_address' => $request->guest_address,
+                            'notes' => $request->notes,
+                        ],
+                    ]);
+                }
+                
+                return redirect()->route('orders')->with('success', 'Pembayaran Keranjang Berhasil! Semua item telah diproses.');
+            }
+
+            // Pembayaran single item (logika lama)
             Booking::create([
                 'user_id' => $userId,
                 'item_type' => 'venue',
@@ -164,7 +193,7 @@ class BookingController extends Controller
             return redirect()->route('orders')->with('success', 'Pembayaran Berhasil! Pesanan Anda telah tersimpan di Database.');
         } catch (\Exception $e) {
             \Log::error('MySQL Booking Error: ' . $e->getMessage());
-            return back()->with('error', 'Maaf, terjadi kesalahan saat menyimpan pesanan.');
+            return back()->with('error', 'Maaf, terjadi kesalahan saat menyimpan pesanan: ' . $e->getMessage());
         }
     }
 }
