@@ -85,3 +85,4 @@ class VenueController extends Controller
         return view('venue-detail', ['venue' => $venueData]);
     }
 }
+

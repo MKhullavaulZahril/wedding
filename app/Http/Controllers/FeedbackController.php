@@ -38,10 +38,11 @@ class FeedbackController extends Controller
                 'user_id' => auth()->id() ?? null
             ]);
 
-            return redirect()->route('dashboard')->with('success', 'Terima kasih! Saran Anda telah kami terima di Firebase.');
+            return redirect()->route('home')->with('success', 'Terima kasih! Saran Anda telah kami terima di Firebase.');
         } catch (\Exception $e) {
             \Log::error('Firebase Error: ' . $e->getMessage());
-            return redirect()->route('dashboard')->with('error', 'Maaf, gagal mengirim saran ke Firebase.');
+            return redirect()->route('home')->with('error', 'Maaf, gagal mengirim saran ke Firebase.');
         }
     }
 }
+

@@ -9,3 +9,4 @@ class PromoController extends Controller
 {
     //
 }
+

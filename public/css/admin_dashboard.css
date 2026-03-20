@@ -710,6 +710,11 @@ html, body {
     font-family: 'Jost', sans-serif;
 }
 
+/* Study Case Specific Grid */
+.studycase-grid {
+    grid-template-columns: 80px 2.5fr 1fr 1.5fr 1fr 1.2fr;
+}
+
 .pricing-row {
     display: grid;
     grid-template-columns: 2fr 1.2fr 1fr 1fr 1fr 100px;

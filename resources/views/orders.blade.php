@@ -19,7 +19,7 @@
     <aside class="sidebar sidebar-left" id="leftSidebar">
         <p class="sidebar-label">Jelajahi</p>
         <ul class="sidebar-menu">
-            <li><a href="{{ route('dashboard') }}">Beranda</a></li>
+            <li><a href="{{ route('home') }}">Beranda</a></li>
             <li><a href="{{ route('venues.index') }}">Gedung</a></li>
             <li><a href="{{ route('flowers.index') }}">Vendor</a></li>
         </ul>
@@ -32,7 +32,7 @@
             @auth
                 <li><p style="padding: 12px 28px; font-size: 0.8rem; color: #888; text-align: right;">{{ Auth::user()->name }}</p></li>
                 <li><a href="{{ route('orders') }}">Pemesanan Saya</a></li>
-                <li><a href="{{ route('logout') }}" class="danger" style="color: #c0445e;">Keluar</a></li>
+                <li><a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('logout') }}" class="danger" style="color: #c0445e;">{{ Auth::user()->role === 'admin' ? 'Panel Admin' : 'Keluar' }}</a></li>
             @else
                 <li><a href="{{ route('login') }}">Masuk</a></li>
                 <li><a href="{{ route('register') }}">Daftar</a></li>
@@ -44,7 +44,7 @@
     <div class="sticky-top-container">
         <header class="curved-header">
             <div class="header-nav">
-                <a href="{{ route('dashboard') }}" class="nav-circle-btn" id="toggleLeft">
+                <a href="{{ route('home') }}" class="nav-circle-btn" id="toggleLeft">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 </a>
 
@@ -106,7 +106,7 @@
                             </div>
                             <div class="order-actions">
                                 <a href="{{ route('venues.show', $order['venue_id']) }}" class="btn-detail">Lihat Detail</a>
-                                @if($order['status'] == 'Menunggu Pembayaran')
+                                @if($order['status'] == 'Belum Diproses')
                                     <a href="{{ route('checkout', ['venue_id' => $order['venue_id']]) }}" class="btn-pay">Bayar Sekarang</a>
                                 @endif
                             </div>
@@ -160,3 +160,4 @@
     <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>
+

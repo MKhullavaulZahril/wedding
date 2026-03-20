@@ -33,3 +33,4 @@
     <path d="M80 130 Q65 118 70 106 Q78 118 80 130" fill="#c8e0c8" stroke="#b0ceb0" stroke-width="0.8"/>
     <path d="M120 130 Q135 118 130 106 Q122 118 120 130" fill="#c8e0c8" stroke="#b0ceb0" stroke-width="0.8"/>
 </svg>
+

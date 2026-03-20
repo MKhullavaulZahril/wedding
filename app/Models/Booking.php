@@ -23,4 +23,14 @@ class Booking extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function venue()
+    {
+        return $this->belongsTo(Venue::class, 'item_id');
+    }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class, 'item_id');
+    }
 }

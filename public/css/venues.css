@@ -115,53 +115,14 @@ body {
     justify-content: center;
 }
 
-/* Inline Search Box */
-.search-box-inline {
+/* Sticky Header for Search & Filter */
+.sticky-controls {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
     background: white;
-    padding: 10px 15px;
-    border-radius: 40px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(0, 0, 0, 0.03);
-    width: 100%;
-    max-width: 700px;
-}
-
-.search-box-inline input {
-    background: transparent;
-    border: none;
-    padding: 10px 15px;
-    font-size: 0.9rem;
-    color: var(--text-main);
-    width: 100%;
-    outline: none;
-    font-family: inherit;
-}
-
-.search-box-inline input:not(:last-child) {
-    border-right: 1px solid #eee;
-}
-
-.search-box-inline button {
-    background: var(--primary);
-    color: white;
-    border: none;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-}
-
-.search-box-inline button:hover {
-    transform: scale(1.05);
-    background: #b52b53;
+    padding-bottom: 5px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 }
 
 /* Sticky Header for Search & Filter */
@@ -215,9 +176,10 @@ body {
 
 .venue-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    /* Diseimbangkan agar bisa berjejer */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 450px));
+    /* Batasi lebar maksimal agar tidak terlalu besar saat hanya ada 1-2 item */
     gap: 30px;
+    justify-content: center; /* Memusatkan item jika jumlahnya sedikit di layar lebar */
 }
 
 /* Venue Card */
@@ -314,9 +276,43 @@ body {
     background: #fff;
 }
 
-/* Responsive */
+/* ═══════════════════════════════════════
+   RESPONSIVE – LAPTOP KECIL
+═══════════════════════════════════════ */
+@media (max-width: 1024px) {
+    .main-content { padding: 0 24px 40px; }
+    .top-nav { padding: 0 24px; }
+    .venue-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE – TABLET
+═══════════════════════════════════════ */
 @media (max-width: 768px) {
-    .venue-grid {
-        grid-template-columns: 1fr;
-    }
+    .top-nav { padding: 0 16px; }
+    .main-content { padding: 0 16px 40px; }
+    .section-title { font-size: 1.4rem; margin-bottom: 24px; }
+    .venue-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .pill-group { gap: 10px; }
+    .filter-container { gap: 8px; padding: 0 12px; }
+    .filter-pill { padding: 8px 14px; font-size: 0.8rem; }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE – HP / MOBILE
+═══════════════════════════════════════ */
+@media (max-width: 480px) {
+    .header-bg { height: 56px; }
+    .top-nav { padding: 0 12px; }
+    .profile-icon, .back-button { width: 38px; height: 38px; }
+    .main-content { padding: 0 12px 30px; }
+    .section-title { font-size: 1.2rem; margin-bottom: 16px; }
+    .venue-grid { grid-template-columns: 1fr; gap: 16px; }
+    .venue-name { font-size: 0.9rem; }
+    .filter-pill { padding: 7px 12px; font-size: 0.75rem; }
+    .card-body { padding: 10px 4px 4px; }
+    .pill-group { flex-direction: column; gap: 8px; }
+    .search-pill { width: 100%; justify-content: flex-start; padding: 10px 20px; }
+    .search-pill input { width: 100%; }
+    .btn-search-pill { width: 100%; border-radius: 50px; height: 45px; margin-top: 5px; }
 }

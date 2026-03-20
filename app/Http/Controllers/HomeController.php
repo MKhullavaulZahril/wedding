@@ -4,20 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class HomeController extends Controller
 {
     /**
-     * Gateway utama setelah login.
-     * Admin  → panel admin
-     * User   → halaman home
+     * Tampilkan halaman utama untuk pengguna (user).
      */
     public function index()
     {
+        // Jika admin mengakses /dashboard, arahkan ke panel admin
         if (auth()->check() && auth()->user()->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }
 
-        return redirect()->route('home');
+        return view('home');
     }
 }
-

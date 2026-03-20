@@ -9,7 +9,7 @@
 </head>
 <body>
     <nav class="navbar">
-        <a href="{{ route('dashboard') }}" class="back-btn">
+        <a href="{{ route('home') }}" class="back-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
                 <line x1="19" y1="12" x2="5" y2="12"></line>
                 <polyline points="12 19 5 12 12 5"></polyline>
@@ -195,7 +195,7 @@
             </div>
 
             <div class="action-bar" style="margin-bottom: 40px;">
-                <a href="{{ route('dashboard') }}" class="btn-cancel" style="display:inline-flex; align-items:center; text-decoration:none;">Batal</a>
+                <a href="{{ route('home') }}" class="btn-cancel" style="display:inline-flex; align-items:center; text-decoration:none;">Batal</a>
                 <button type="submit" class="btn-save">SIMPAN PERUBAHAN</button>
             </div>
         </form>
@@ -228,3 +228,4 @@
     <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>
+

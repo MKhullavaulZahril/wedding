@@ -219,12 +219,13 @@ body {
 
 .stars-interactive svg:hover,
 .stars-interactive svg.active {
-    color: var(--primary-light);
+    color: var(--gold);
+    transform: scale(1.15);
 }
 
 .stars-interactive svg.active,
 .stars-interactive svg.selected {
-    color: var(--primary-light);
+    color: var(--gold);
 }
 
 .helper-text {
@@ -278,8 +279,14 @@ body {
     cursor: pointer;
 }
 
-.aspect-stars svg.active {
-    color: var(--primary-light);
+.aspect-stars svg.active,
+.aspect-stars svg.selected {
+    color: var(--gold);
+}
+
+.aspect-stars svg:hover {
+    color: var(--gold);
+    transform: scale(1.2);
 }
 
 /* Textarea */
@@ -603,4 +610,26 @@ textarea:focus {
     width: 10px;
     height: 10px;
     color: var(--gold);
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE DESIGN
+═══════════════════════════════════════ */
+@media (max-width: 900px) {
+    .grid-layout { grid-template-columns: 1fr; gap: 20px; }
+    .card { padding: 25px; }
+    .page-header h1 { font-size: 1.8rem; }
+}
+
+@media (max-width: 480px) {
+    .navbar { padding: 16px 20px; }
+    .container { margin: 20px auto; padding: 0 16px; }
+    .card { padding: 20px 16px; border-radius: 16px; }
+    .aspects-grid { grid-template-columns: 1fr; }
+    .rating-score { font-size: 3.5rem; }
+    .stars-interactive svg { width: 32px; height: 32px; }
+    .btn-submit { padding: 16px; font-size: 0.75rem; }
+    .review-item { padding-bottom: 16px; }
+    .reviewer-rating { position: relative; margin-top: 4px; }
+    .reviewer-info { flex-wrap: wrap; }
 }

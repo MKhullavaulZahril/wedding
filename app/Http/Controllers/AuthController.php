@@ -71,10 +71,7 @@ class AuthController extends Controller
                 Log::error('Firebase Role Sync Error: ' . $e->getMessage());
             }
 
-            if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard');
-            }
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard.index');
 
         } catch (\Exception $e) {
             return redirect()->route('login')->withErrors(['email' => 'Gagal login menggunakan Google. ' . $e->getMessage()]);
@@ -126,11 +123,7 @@ class AuthController extends Controller
                 Log::error('Firebase Role Sync Error: ' . $e->getMessage());
             }
             
-            if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard');
-            }
-            
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard.index');
         }
 
         return back()->withErrors([
@@ -186,7 +179,7 @@ class AuthController extends Controller
 
             Auth::login($user);
 
-            return redirect()->route('dashboard')->with('success', 'Akun berhasil dibuat dan terdaftar di Firebase!');
+            return redirect()->route('dashboard.index')->with('success', 'Akun berhasil dibuat!');
 
         } catch (\Exception $e) {
             return back()->withErrors(['email' => 'Gagal mendaftar ke Firebase: ' . $e->getMessage()])->withInput();
@@ -206,3 +199,4 @@ class AuthController extends Controller
         return redirect()->route('landing');
     }
 }
+

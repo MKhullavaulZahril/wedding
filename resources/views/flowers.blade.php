@@ -19,7 +19,7 @@
     <div class="header-bg">
         <div class="top-nav">
             <div class="nav-left">
-                <a href="{{ route('dashboard') }}" class="back-button" title="Kembali ke Dashboard">
+                <a href="{{ route('home') }}" class="back-button" title="Kembali ke Dashboard">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                 </a>
                 <a href="{{ route('profile.edit') }}" class="profile-icon" title="Edit Profil" style="overflow: hidden; display: flex; align-items: center; justify-content: center; text-decoration: none; color: inherit;">
@@ -34,6 +34,9 @@
                     @endauth
                 </a>
             </div>
+
+            <span class="header-logo">Wedding Organizations</span>
+
             <div class="menu-icon" id="toggleRight">
                 <span></span>
                 <span></span>
@@ -49,7 +52,7 @@
     <aside class="sidebar sidebar-left" id="leftSidebar">
         <p class="sidebar-label">Jelajahi</p>
         <ul class="sidebar-menu">
-            <li><a href="{{ route('dashboard') }}">Beranda</a></li>
+            <li><a href="{{ route('home') }}">Beranda</a></li>
             <li><a href="{{ route('venues.index') }}">Gedung</a></li>
             <li><a href="{{ route('flowers.index') }}">Vendor</a></li>
         </ul>
@@ -62,7 +65,7 @@
             @auth
                 <li><p style="padding: 12px 28px; font-size: 0.8rem; color: #888; text-align: right;">{{ Auth::user()->name }}</p></li>
                 <li><a href="{{ route('orders') }}">Pemesanan Saya</a></li>
-                <li><a href="{{ route('logout') }}" class="danger" style="color: #c0445e;" onclick="localStorage.removeItem('wo_cart')">Keluar</a></li>
+                <li><a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('logout') }}" class="danger" style="color: #c0445e;" @if(Auth::user()->role !== 'admin') onclick="localStorage.removeItem('wo_cart')" @endif>{{ Auth::user()->role === 'admin' ? 'Panel Admin' : 'Keluar' }}</a></li>
             @else
                 <li><a href="{{ route('login') }}">Masuk</a></li>
                 <li><a href="{{ route('register') }}">Daftar</a></li>
@@ -103,20 +106,22 @@
 
     <main>
         <div class="sticky-controls" style="padding-top: 20px;">
-            <div class="search-container" style="margin-top: 10px;">
-        <form action="{{ route('flowers.index') }}" method="GET" class="search-box-inline">
-            <input type="hidden" name="category" value="{{ request('category') }}">
-            <input type="text" name="q" placeholder="Cari nama atau jasa vendor..." value="{{ request('q') }}">
-            <input type="text" name="location" placeholder="Lokasi..." value="{{ request('location') }}">
-            <button type="submit">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </button>
-        </form>
-    </div>
-            <div class="search-container" style="margin-bottom: 20px;">
-                <div class="search-input">{{ request('date_start', date('Y-m-d')) }}</div>
-                <div class="search-input">{{ request('date_end', date('Y-m-d', strtotime('+1 day'))) }}</div>
+            <div class="search-container">
+                <form action="{{ route('flowers.index') }}" method="GET" class="pill-group">
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                    
+                    {{-- Pill: Start Date --}}
+                    <div class="search-pill">
+                        <input type="date" name="date_start" value="{{ request('date_start', date('Y-m-d')) }}" onchange="this.form.submit()">
+                    </div>
+
+                    {{-- Pill: End Date --}}
+                    <div class="search-pill">
+                        <input type="date" name="date_end" value="{{ request('date_end', date('Y-m-d', strtotime('+1 day'))) }}" onchange="this.form.submit()">
+                    </div>
+                </form>
             </div>
+        </div>
 
             <div class="filter-container">
                 <a href="{{ route('flowers.index', request()->except('category')) }}" class="filter-pill {{ !$selectedCategory ? 'active' : '' }}">Semua</a>
@@ -207,3 +212,4 @@
     <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>
+

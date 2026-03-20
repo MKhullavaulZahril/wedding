@@ -22,3 +22,4 @@ class AdminMiddleware
         return redirect()->route('login')->withErrors(['email' => 'Halaman ini hanya untuk administrator.']);
     }
 }
+

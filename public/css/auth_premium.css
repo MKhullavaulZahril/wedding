@@ -860,3 +860,38 @@ body {
     .form-title  { font-size: 2.4rem; }
     .brand       { margin-bottom: 40px; }
 }
+/* ════════════════════════════════
+   ANIMATIONS & RESPONSIVE
+════════════════════════════════ */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 1024px) {
+    :root { --panel-width: 450px; }
+    .panel-left-content { padding: 60px 40px; }
+    .panel-right { padding: 60px 44px; }
+}
+
+@media (max-width: 900px) {
+    .layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow-y: auto;
+    }
+    .resizer { display: none; }
+    .panel-left { height: 35vh; min-height: 280px; }
+    .panel-left-content { padding: 40px 32px; justify-content: center; }
+    .panel-tagline { font-size: 2.4rem; margin-bottom: 12px; }
+    .panel-right { padding: 48px 32px; overflow-y: visible; }
+    .brand { margin-bottom: 40px; }
+}
+
+@media (max-width: 480px) {
+    .panel-left { height: 28vh; min-height: 220px; }
+    .panel-tagline { font-size: 1.9rem; }
+    .panel-desc { font-size: 0.65rem; margin-bottom: 24px; }
+    .panel-right { padding: 40px 24px; }
+    .form-title { font-size: 2rem; }
+    .btn-submit { padding: 15px 20px; letter-spacing: 0.2em; font-size: 0.6rem; }
+    .input-wrap input { padding: 13px 42px; font-size: 0.85rem; }
+    .form-options { flex-direction: column; align-items: flex-start; gap: 12px; }
+}

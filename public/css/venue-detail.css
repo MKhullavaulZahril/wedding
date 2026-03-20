@@ -108,29 +108,11 @@ body {
     border-radius: 2px;
 }
 
-/* ── SEARCH PILLS ─────────────────────────── */
-.search-pills-row {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    margin-top: 15px;
-    /* Changed from negative margin to normal */
+/* ── SEARCH PILLS (Centralized in Global) ── */
+.pills-container-detail {
+    margin-top: 10px;
     position: relative;
-    z-index: 20;
-}
-
-.pill-input {
-    background: #fff;
-    padding: 12px 40px;
-    border-radius: 50px;
-    border: 1.5px solid var(--rose-lt);
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    min-width: 200px;
-    text-align: center;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    z-index: 100;
 }
 
 /* ── PANELS CONTAINER ─────────────────────── */
@@ -466,8 +448,40 @@ body {
     color: var(--text-muted);
 }
 
+/* ═══════════════════════════════════════
+   RESPONSIVE – LAPTOP KECIL
+═══════════════════════════════════════ */
+@media (max-width: 1024px) {
+    .panels-container { padding: 0 24px; gap: 20px; }
+    .venue-name-style { font-size: 1.8rem; }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE – TABLET
+═══════════════════════════════════════ */
 @media (max-width: 900px) {
-    .panels-container {
-        flex-direction: column;
-    }
+    .panels-container { flex-direction: column; padding: 0 20px; }
+    .search-pills-row { gap: 12px; flex-wrap: wrap; padding: 0 16px; }
+    .pill-input { min-width: unset; padding: 10px 20px; width: 100%; }
+    .secondary-gallery { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .main-gallery-card { height: 260px; }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE – HP / MOBILE
+═══════════════════════════════════════ */
+@media (max-width: 480px) {
+    .header-bg { height: 56px; }
+    .top-nav { padding: 0 12px; }
+    .panels-container { padding: 0 12px; margin-top: 12px; }
+    .panel { padding: 18px; border-radius: 18px; }
+    .venue-name-style { font-size: 1.5rem; }
+    .main-gallery-card { height: 210px; border-radius: 14px; }
+    .secondary-gallery { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .gal-item { height: 72px; border-radius: 10px; }
+    .price-strip { flex-wrap: wrap; gap: 8px; }
+    .btn-book-now { width: 100%; text-align: center; padding: 12px 20px; }
+    .owner-premium-card { flex-direction: column; }
+    .owner-avatar img { width: 80px; height: 90px; }
+    .p-amount { font-size: 1.5rem; }
 }

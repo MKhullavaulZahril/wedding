@@ -511,12 +511,36 @@ select.modern-input {
 }
 
 /* --- Mobile --- */
-@media (max-width: 850px) {
-    main {
-        grid-template-columns: 1fr;
-    }
+/* ═══════════════════════════════════════
+   RESPONSIVE – TABLET & SMALL LAPTOP
+═══════════════════════════════════════ */
+@media (max-width: 1024px) {
+    main { grid-template-columns: 1fr; gap: 30px; padding: 0 24px; }
+    .venue-preview { position: static; }
+}
 
-    .venue-preview {
-        position: static;
-    }
+@media (max-width: 850px) {
+    .top-nav { padding: 0 20px; }
+    .nav-brand { font-size: 1.2rem; }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE – HP / MOBILE
+═══════════════════════════════════════ */
+@media (max-width: 480px) {
+    .header-bg { height: 56px; }
+    .top-nav { padding: 0 16px; }
+    .back-button { width: 36px; height: 36px; }
+    .summary-bar { padding: 15px 0; }
+    .pill-display { padding: 6px 16px; font-size: 0.75rem; }
+    main { margin-top: 20px; padding: 0 12px; }
+    .panel { padding: 20px 16px; border-radius: 16px; }
+    .venue-title { font-size: 1.4rem; }
+    .form-row { grid-template-columns: 1fr; gap: 0; }
+    .payment-methods { grid-template-columns: 1fr; }
+    .wallet-options { grid-template-columns: 1fr; }
+    .summary-item.total .value { font-size: 1.35rem; }
+    .pay-now-btn { padding: 16px; font-size: 1rem; }
+    #va-number { font-size: 1rem; letter-spacing: 1px; }
+    .btn-copy-va { padding: 6px 10px; font-size: 0.7rem; }
 }

@@ -35,7 +35,7 @@
     <div class="header-bg">
         <div class="top-nav">
             <div class="nav-left">
-                <a href="{{ route('dashboard') }}" class="back-button" title="Kembali ke Dashboard">
+                <a href="{{ route('home') }}" class="back-button" title="Kembali ke Dashboard">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                 </a>
                 <a href="{{ route('profile.edit') }}" class="profile-icon" title="Edit Profil" style="overflow: hidden; display: flex; align-items: center; justify-content: center; text-decoration: none; color: inherit;">
@@ -50,6 +50,9 @@
                     @endauth
                 </a>
             </div>
+
+            <span class="header-logo">Wedding Organizations</span>
+
             <div class="menu-icon" id="toggleRight">
                 <span></span>
                 <span></span>
@@ -65,7 +68,7 @@
     <aside class="sidebar sidebar-left" id="leftSidebar">
         <p class="sidebar-label">Jelajahi</p>
         <ul class="sidebar-menu">
-            <li><a href="{{ route('dashboard') }}">Beranda</a></li>
+            <li><a href="{{ route('home') }}">Beranda</a></li>
             <li><a href="{{ route('venues.index') }}">Gedung</a></li>
             <li><a href="{{ route('flowers.index') }}">Vendor</a></li>
         </ul>
@@ -113,7 +116,26 @@
             $selectedCategory = request('category');
             $categoryName = $categoryMap[$selectedCategory] ?? 'Semua Venue';
         @endphp
+        
+        <div class="sticky-controls" style="padding-top: 20px;">
+            <div class="search-container">
+                <form action="{{ route('venues.index') }}" method="GET" class="pill-group">
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                    
+                    {{-- Pill: Start Date --}}
+                    <div class="search-pill">
+                        <input type="date" name="date_start" value="{{ request('date_start', date('Y-m-d')) }}" onchange="this.form.submit()">
+                    </div>
 
+                    {{-- Pill: End Date --}}
+                    <div class="search-pill">
+                        <input type="date" name="date_end" value="{{ request('date_end', date('Y-m-d', strtotime('+1 day'))) }}" onchange="this.form.submit()">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    <div class="main-content">
         <div class="filter-container">
             <a href="{{ route('venues.index') }}" class="filter-pill {{ !$selectedCategory ? 'active' : '' }}">Semua</a>
             @foreach($categoryMap as $key => $label)
@@ -184,3 +206,4 @@
     <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>
+

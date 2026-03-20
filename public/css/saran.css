@@ -205,21 +205,22 @@ body {
     box-shadow: 0 12px 25px rgba(192, 67, 95, 0.35);
 }
 
-/* Responsive Design */
+/* ═══════════════════════════════════════
+   RESPONSIVE DESIGN
+═══════════════════════════════════════ */
 @media (max-width: 768px) {
-    .main-content {
-        padding: 20px 15px;
-    }
+    .container { margin: 24px auto; padding: 0 16px; }
+    .card { padding: 30px 24px; }
+    .page-header h1 { font-size: 1.8rem; }
+    .action-bar { flex-direction: column; gap: 12px; }
+    .btn-cancel, .btn-submit { width: 100%; text-align: center; }
+}
 
-    .feedback-card {
-        padding: 25px 20px;
-    }
-
-    .title {
-        font-size: 1.8rem;
-    }
-
-    .btn-submit {
-        width: 100%;
-    }
+@media (max-width: 480px) {
+    .navbar { padding: 14px 20px; }
+    .card { padding: 24px 18px; border-radius: 14px; }
+    .page-header h1 { font-size: 1.5rem; }
+    .page-header p { font-size: 0.8rem; }
+    .illustration svg { width: 48px; height: 48px; }
+    .field input, .field select, .field textarea { padding: 12px 14px; font-size: 0.8rem; }
 }

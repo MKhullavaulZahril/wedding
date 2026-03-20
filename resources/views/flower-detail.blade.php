@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ asset('css/flower-detail.css') }}">
     <link rel="stylesheet" href="{{ asset('css/global-layout.css') }}">
     <link rel="stylesheet" href="{{ asset('css/cart.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- --- HEADER --- -->
@@ -28,6 +29,9 @@
                     @endauth
                 </a>
             </div>
+
+            <span class="header-logo">Wedding Organizations</span>
+
             <div class="menu-icon" id="toggleRight">
                 <span></span>
                 <span></span>
@@ -38,9 +42,23 @@
 
     <main>
     <!-- --- DATE INFO --- -->
-    <div style="display: flex; gap: 24px; justify-content: center; margin-top: -25px; position: relative; z-index: 20;">
-        <div style="background: white; padding: 12px 40px; border-radius: 50px; border: 1.5px solid var(--primary-light); color: var(--text-muted); font-size: 0.85rem; font-weight: 500; min-width: 200px; text-align: center; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);">{{ request('date_start', date('Y-m-d')) }}</div>
-        <div style="background: white; padding: 12px 40px; border-radius: 50px; border: 1.5px solid var(--primary-light); color: var(--text-muted); font-size: 0.85rem; font-weight: 500; min-width: 200px; text-align: center; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);">{{ request('date_end', date('Y-m-d', strtotime('+1 day'))) }}</div>
+    <div style="margin-top: -15px; position: relative; z-index: 100;">
+        <form action="{{ url()->current() }}" method="GET" class="pill-group">
+            {{-- Maintain query parameters --}}
+            @foreach(request()->except(['date_start', 'date_end']) as $key => $value)
+                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+            @endforeach
+
+            {{-- Pill: Start Date --}}
+            <div class="search-pill">
+                <input type="date" name="date_start" value="{{ request('date_start', date('Y-m-d')) }}" onchange="this.form.submit()">
+            </div>
+
+            {{-- Pill: End Date --}}
+            <div class="search-pill">
+                <input type="date" name="date_end" value="{{ request('date_end', date('Y-m-d', strtotime('+1 day'))) }}" onchange="this.form.submit()">
+            </div>
+        </form>
     </div>
 
 
@@ -155,7 +173,7 @@
     <aside class="sidebar sidebar-left" id="leftSidebar">
         <p class="sidebar-label">Jelajahi</p>
         <ul class="sidebar-menu">
-            <li><a href="{{ route('dashboard') }}">Beranda</a></li>
+            <li><a href="{{ route('home') }}">Beranda</a></li>
             <li><a href="{{ route('venues.index') }}">Gedung</a></li>
             <li><a href="{{ route('flowers.index') }}">Vendor</a></li>
         </ul>
@@ -168,7 +186,7 @@
             @auth
                 <li><p style="padding: 12px 28px; font-size: 0.8rem; color: #888; text-align: right;">{{ Auth::user()->name }}</p></li>
                 <li><a href="{{ route('orders') }}">Pemesanan Saya</a></li>
-                <li><a href="{{ route('logout') }}" class="danger" style="color: #c0445e;">Keluar</a></li>
+                <li><a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('logout') }}" class="danger" style="color: #c0445e;">{{ Auth::user()->role === 'admin' ? 'Panel Admin' : 'Keluar' }}</a></li>
             @else
                 <li><a href="{{ route('login') }}">Masuk</a></li>
                 <li><a href="{{ route('register') }}">Daftar</a></li>
@@ -202,3 +220,4 @@
     <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>
+

@@ -46,7 +46,7 @@
             <a class="nav-item" onclick="switchTab('orders', this)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                 Pesanan
-                <span class="nav-badge">0</span>
+                <span class="nav-badge">{{ count($bookings) }}</span>
             </a>
             <a class="nav-item" onclick="switchTab('users', this)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -63,6 +63,10 @@
             <a class="nav-item" onclick="switchTab('sarans', this)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><line x1="9" y1="10" x2="15" y2="10"></line><line x1="12" y1="7" x2="12" y2="13"></line></svg>
                 Saran Customer
+            </a>
+            <a class="nav-item" onclick="switchTab('studycase', this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Study Case
             </a>
         </nav>
 
@@ -122,8 +126,8 @@
                     <div class="stat-card">
                         <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
                         <div class="stat-label">Pesanan Baru</div>
-                        <div class="stat-value">0</div>
-                        <div class="stat-sub">Belum ada pesanan</div>
+                        <div class="stat-value">{{ count($bookings) }}</div>
+                        <div class="stat-sub">Total pesanan masuk</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
@@ -274,49 +278,125 @@
                 </div>
             </div>
 
-            <!-- ── ORDERS TAB ── -->
-            <div class="tab-panel" id="tab-orders">
-                <div class="empty-state">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                    <h3>Modul Pesanan</h3>
-                    <p>Halaman ini sedang dalam pengembangan.<br>Segera hadir.</p>
-                </div>
-            </div>
-
-            <!-- ── USERS TAB ── -->
             <div class="tab-panel" id="tab-users">
-                <div class="empty-state">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    <h3>Manajemen Pengguna</h3>
-                    <p>Halaman ini sedang dalam pengembangan.<br>Segera hadir.</p>
+                <div class="section-header">
+                    <h2 class="section-title">Manajemen <em>Pengguna</em></h2>
+                    <div class="section-actions">
+                        <div class="search-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            <input type="text" class="search-input" placeholder="Cari pengguna…" oninput="filterCards(this, 'userRows')">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pricing-table fade-in">
+                    <div class="pricing-table-header" style="display:grid; grid-template-columns: 0.8fr 2fr 2fr 1fr 1.2fr; align-items:center;">
+                        <div style="padding:15px; font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); font-weight:600;">ID User</div>
+                        <div style="padding:15px; font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); font-weight:600;">Nama Lengkap</div>
+                        <div style="padding:15px; font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); font-weight:600;">Email</div>
+                        <div style="padding:15px; font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); font-weight:600;">Role</div>
+                        <div style="padding:15px; font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); font-weight:600;">Tgl Join</div>
+                    </div>
+                    <div id="userRows">
+                        @foreach($users as $user)
+                        <div class="pricing-table-row item-card" data-name="{{ strtolower($user->name) }} {{ strtolower($user->email) }}" style="display:grid; grid-template-columns: 0.8fr 2fr 2fr 1fr 1.2fr; align-items:center; border-bottom:1px solid var(--border-light);">
+                            <div style="padding:15px">#{{ $user->id }}</div>
+                            <div style="padding:15px; font-weight:500;">{{ $user->name }}</div>
+                            <div style="padding:15px; color:var(--muted);">{{ $user->email }}</div>
+                            <div style="padding:15px">
+                                <span class="pricing-badge {{ $user->role === 'admin' ? 'active' : '' }}" style="text-transform: capitalize;">
+                                    {{ $user->role ?? 'User' }}
+                                </span>
+                            </div>
+                            <div style="padding:15px; font-size:0.85rem;">{{ $user->created_at->format('d/m/Y') }}</div>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
 
-            <!-- ── PROMOS TAB ── -->
-            <div class="tab-panel" id="tab-promos">
+            <div class="tab-panel" id="tab-orders">
                 <div class="section-header">
-                    <h2 class="section-title">Manajemen <em>Promo & Voucher</em></h2>
-                    <div class="section-actions">
-                        <button class="btn-add" onclick="openModal('modalPromo')">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                            <span>Buat Promo Baru</span>
-                        </button>
+                    <h2 class="section-title">Daftar <em>Pesanan</em></h2>
+                    <div class="section-actions" style="gap:16px">
+                        <!-- BULK ACTION BAR (Identical to Venue) -->
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; cursor:pointer; color:var(--muted); font-weight:500;" id="selectAllWrap-orders">
+                                <input type="checkbox" id="selectAll-orders" onchange="toggleSelectAll('orders')" style="accent-color:var(--danger); width:16px; height:16px;">
+                                Pilih Semua
+                            </label>
+                            <div class="bulk-action" id="bulk-orders">
+                                <span class="bulk-text" id="bulkText-orders">0 terpilih</span>
+                                <button class="bulk-btn" onclick="bulkDelete('orders')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                    Hapus
+                                </button>
+                            </div>
+                        </div>
+                        <div class="search-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            <input type="text" class="search-input" placeholder="Cari pesanan..." onkeyup="filterCards(this, 'ordersGrid')">
+                        </div>
                     </div>
                 </div>
+
                 <div class="pricing-table fade-in">
-                    <div class="pricing-table-header">
-                        <th>Kode Promo</th>
-                        <th>Tipe</th>
-                        <th>Nilai Diskon</th>
-                        <th>Batas Guna</th>
-                        <th>Terpakai</th>
-                        <th>Kadaluarsa</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
+                    <div class="pricing-table-header" style="display:grid; grid-template-columns: 0.35fr 0.8fr 1.5fr 2fr 1.2fr 1fr 1.2fr 0.8fr; align-items:center;">
+                        <div style="padding:15px;"></div>
+                        <div style="padding:15px; font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); font-weight:600;">ID Pesanan</div>
+                        <div style="padding:15px; font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); font-weight:600;">Pelanggan</div>
+                        <div style="padding:15px; font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); font-weight:600;">Item (Venue/Vendor)</div>
+                        <div style="padding:15px; font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); font-weight:600;">Total Harga</div>
+                        <div style="padding:15px; font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); font-weight:600;">Status</div>
+                        <div style="padding:15px; font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); font-weight:600;">Tanggal Pesan</div>
+                        <div style="padding:15px; font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); font-weight:600;">Aksi</div>
                     </div>
-                    <div id="promoRows">
-                        <!-- populated by JS -->
+                    <div id="ordersGrid">
+                        @forelse($bookings as $booking)
+                        <div class="pricing-table-row item-card" data-name="{{ strtolower($booking->user->name ?? '') }} #{{ $booking->id }}" style="display:grid; grid-template-columns: 0.35fr 0.8fr 1.5fr 2fr 1.2fr 1fr 1.2fr 0.8fr; align-items:center; border-bottom:1px solid var(--border-light);">
+                            <div style="padding:15px;"><input type="checkbox" class="chk-orders" value="{{ $booking->id }}" onchange="toggleBulk('orders')"></div>
+                            <div style="padding:15px">#{{ $booking->id }}</div>
+                            <div style="padding:15px">{{ $booking->user->name ?? 'User #'.$booking->user_id }}</div>
+                            <div style="padding:15px">
+                                <strong style="color:var(--gold-deep)">
+                                    @if($booking->venue_id) Venue #{{$booking->venue_id}} 
+                                    @elseif($booking->vendor_id) Vendor #{{$booking->vendor_id}}
+                                    @endif
+                                </strong>
+                            </div>
+                            <div style="padding:15px">Rp {{ number_format((float)$booking->total_price, 0, ',', '.') }}</div>
+                            <div style="padding:15px">
+                                <select class="pricing-badge" onchange="updateOrderStatus({{ $booking->id }}, this.value)" 
+                                    style="border:none; cursor:pointer; font-family:inherit; font-size:0.75rem; 
+                                    background: {{ $booking->status === 'Selesai' ? 'rgba(52,199,89,0.1)' : ($booking->status === 'Dibatalkan' ? 'rgba(255,59,48,0.1)' : 'rgba(255,159,10,0.1)') }};
+                                    color: {{ $booking->status === 'Selesai' ? 'var(--success)' : ($booking->status === 'Dibatalkan' ? 'var(--danger)' : 'var(--warning)') }};">
+                                    <option value="Belum Diproses" {{ $booking->status === 'Belum Diproses' ? 'selected' : '' }}>Belum Diproses</option>
+                                    <option value="Diproses" {{ $booking->status === 'Diproses' ? 'selected' : '' }}>Diproses</option>
+                                    <option value="Selesai" {{ $booking->status === 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                                    <option value="Dibatalkan" {{ $booking->status === 'Dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+                                </select>
+                            </div>
+                            <div style="padding:15px">{{ $booking->created_at->format('d M Y') }}</div>
+                            <div style="padding:15px; display:flex; gap:8px;">
+                                <button class="btn-xs" onclick="viewOrder({{ $booking->id }})" style="background:rgba(255,255,255,0.05); border:1px solid var(--border-light); color:var(--muted);">Detail</button>
+                                <button class="btn-xs danger" onclick="openDelete('orders', {{ $booking->id }}, '#{{ $booking->id }}')" style="background:transparent; border:none; padding:5px; color:var(--danger); opacity:0.7;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                        @empty
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            <h3>Belum Ada Pesanan</h3>
+                        </div>
+                        @endforelse
                     </div>
+                    
+
                 </div>
             </div>
 
@@ -325,6 +405,12 @@
     <div class="tab-panel" id="tab-ratings">
         <div class="section-header">
             <h2 class="section-title">Rating &amp; <em>Ulasan Customer</em></h2>
+            <div class="section-actions">
+                <button class="btn-add" onclick="openModal('modalRatingManual')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span>Tambah Testimoni</span>
+                </button>
+            </div>
         </div>
         
         <div class="reviews-list">
@@ -363,9 +449,6 @@
                         <div class="review-date">
                             Dikirim pada {{ $rating->created_at->format('d F Y') }}
                         </div>
-                        <span class="pricing-badge {{ $rating->is_approved ? 'badge-active' : 'badge-inactive' }}">
-                            {{ $rating->is_approved ? 'Published' : 'Pending Review' }}
-                        </span>
                     </div>
                 </div>
             </div>
@@ -397,9 +480,6 @@
                             <span class="category-tag">{{ $saran->category }}</span>
                             <div class="saran-title" style="margin-top:8px">{{ $saran->title }}</div>
                         </div>
-                        <span class="pricing-badge {{ $saran->status === 'read' ? 'badge-active' : 'badge-inactive' }}">
-                            {{ $saran->status === 'read' ? 'Terbaca' : 'Pesan Baru' }}
-                        </span>
                     </div>
                     <div class="review-text" style="font-style: normal; color: var(--ink-muted); padding-left:0; border-left:none">
                         {{ $saran->content ?? 'Tidak ada detail pesan.'}}
@@ -422,6 +502,53 @@
         </div>
     </div>
 
+            <!-- ── STUDY CASE TAB ── -->
+            <div class="tab-panel" id="tab-studycase">
+                <div class="section-header">
+                    <h2 class="section-title">Laporan <em>Study Case</em></h2>
+                    <div class="section-actions" style="gap:16px">
+                        <span style="font-size: 0.72rem; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; font-weight: 500;">
+                            Data Venue (Seeder) · 10 Baris / Halaman
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="pricing-table fade-in">
+                    <div class="pricing-table-header studycase-grid">
+                        <th>ID</th>
+                        <th>Nama Venue</th>
+                        <th>Kategori</th>
+                        <th>Pemilik/PIC</th>
+                        <th>Kapasitas</th>
+                        <th>Harga (Rp)</th>
+                    </div>
+                    <div id="studycaseRows">
+                        @forelse($venuesPaged as $v)
+                            <div class="pricing-row studycase-grid">
+                                <td style="color: var(--danger); font-weight: 700;">#{{ $v->id }}</td>
+                                <td style="font-weight: 500; color: var(--ink);">{{ $v->name }}</td>
+                                <td>
+                                    <span class="pricing-badge" style="background: var(--gold-dim); color: var(--gold-deep);">
+                                        {{ ucfirst($v->category) }}
+                                    </span>
+                                </td>
+                                <td>{{ $v->owner }}</td>
+                                <td>{{ number_format($v->capacity ?? 0, 0, ',', '.') }} Pax</td>
+                                <td class="pricing-price">Rp {{ number_format($v->price, 0, ',', '.') }}</td>
+                            </div>
+                        @empty
+                            <div style="padding: 60px; text-align: center; color: var(--muted); font-size: 0.85rem;">
+                                Tidak ada data ditemukan dalam database.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px; display: flex; justify-content: flex-end;">
+                    {{ $venuesPaged->links() }}
+                </div>
+            </div>
+
         </div><!-- /content -->
     </main>
 </div><!-- /app -->
@@ -437,21 +564,9 @@
             </button>
         </div>
         <div class="modal-body">
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Nama Venue</label>
-                    <input type="text" class="form-control" placeholder="cth. Grand Ballroom Surabaya" id="venueNameInput">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Kategori</label>
-                    <select class="form-control" name="category" id="venueCategoryInput">
-                        <option value="">Pilih kategori…</option>
-                        <option value="taman">Taman / Outdoor</option>
-                        <option value="pulau">Pulau / Tepi Laut</option>
-                        <option value="resort">Resort / Hotel</option>
-                        <option value="gedung">Gedung / Ballroom</option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label class="form-label">Nama Venue</label>
+                <input type="text" name="name" id="venueNameInput" class="form-control" placeholder="cth. Grand Ballroom Surabaya">
             </div>
             <div class="form-group">
                 <label class="form-label">Deskripsi</label>
@@ -464,7 +579,17 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Kota / Lokasi</label>
-                    <input type="text" name="location" id="venueLocationInput" class="form-control" placeholder="cth. Surabaya, Jawa Timur">
+                    <select name="location" id="venueLocationInput" class="form-control">
+                        <option value="" disabled selected>Pilih Kota / Lokasi</option>
+                        <option value="Jakarta">Jakarta</option>
+                        <option value="Surabaya">Surabaya</option>
+                        <option value="Sidoarjo">Sidoarjo</option>
+                        <option value="Bandung">Bandung</option>
+                        <option value="Semarang">Semarang</option>
+                        <option value="Bali">Bali</option>
+                        <option value="Yogyakarta">Yogyakarta</option>
+                        <option value="Malang">Malang</option>
+                    </select>
                 </div>
             </div>
             <div class="form-row">
@@ -524,7 +649,6 @@
         </div>
     </div>
 </div>
-
 <!-- ════════════════════ MODAL VENDOR ════════════════════ -->
 <div class="modal-backdrop" id="modalVendor">
     <div class="modal modal-lg">
@@ -752,47 +876,46 @@
     </div>
 </div>
 
-<!-- ════════════════════ MODAL PROMO ════════════════════ -->
-<div class="modal-backdrop" id="modalPromo">
+
+
+<!-- ════════════════════ MODAL RATING MANUAL ════════════════════ -->
+<div class="modal-backdrop" id="modalRatingManual">
     <div class="modal">
         <div class="modal-header">
-            <h2 class="modal-title">Buat <em>Promo Baru</em></h2>
-            <button class="modal-close" onclick="closeModal('modalPromo')">
+            <h2 class="modal-title">Tambah <em>Testimoni Manual</em></h2>
+            <button class="modal-close" onclick="closeModal('modalRatingManual')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label class="form-label">Kode Promo</label>
-                <input type="text" class="form-control" placeholder="cth. MERDEKA20" id="promoCodeInput" style="text-transform:uppercase">
+                <label class="form-label">Nama Pemberi Ulasan</label>
+                <input type="text" class="form-control" placeholder="cth. Ibu Sari & Bapak Budi" id="rateAuthorInput">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Target (Venue/Vendor)</label>
+                <input type="text" class="form-control" placeholder="cth. Grand Ballroom LIPI" id="rateTargetInput">
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label class="form-label">Tipe Diskon</label>
-                    <select class="form-control" id="promoTypeInput">
-                        <option value="percentage">Persentase (%)</option>
-                        <option value="fixed">Nominal (Rp)</option>
+                    <label class="form-label">Rating Bintang (1-5)</label>
+                    <select class="form-control" id="rateStarInput">
+                        <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                        <option value="4">⭐⭐⭐⭐ (4)</option>
+                        <option value="3">⭐⭐⭐ (3)</option>
+                        <option value="2">⭐⭐ (2)</option>
+                        <option value="1">⭐ (1)</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Nilai Diskon</label>
-                    <input type="number" class="form-control" placeholder="0" id="promoValueInput">
-                </div>
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Batas Penggunaan</label>
-                    <input type="number" class="form-control" placeholder="Kosongkan jika tidak ada batas" id="promoLimitInput">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Kadaluarsa</label>
-                    <input type="date" class="form-control" id="promoExpiryInput">
-                </div>
+            <div class="form-group">
+                <label class="form-label">Isi Ulasan</label>
+                <textarea class="form-control" placeholder="Tuliskan pengalaman manis mereka di sini…" id="rateTextInput" style="min-height:100px"></textarea>
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn-xs" onclick="closeModal('modalPromo')">Batal</button>
-            <button class="btn-xs primary" onclick="savePromo()">Buat Promo</button>
+            <button class="btn-xs" onclick="closeModal('modalRatingManual')">Batal</button>
+            <button class="btn-xs primary" onclick="saveRatingManual()">Simpan Testimoni</button>
         </div>
     </div>
 </div>
@@ -826,6 +949,23 @@ let vendors = {!! json_encode($vendors) !!};
 let deleteTarget = null;
 
 /* ═══════════════════════════════════════
+   FORMATTING HELPERS
+   ═══════════════════════════════════════ */
+const fmtPrice = v => 'Rp ' + (v/1000000).toFixed(1) + 'jt';
+const fmtFull  = v => 'Rp ' + parseInt(v).toLocaleString('id-ID');
+
+function statusDot(v) {
+    const color = v.status === 'active' ? 'var(--success)' : 'var(--muted-lt)';
+    return `<div class="status-dot" style="background:${color}" title="${v.status}"></div>`;
+}
+
+function statusBadge(status) {
+    let cls = 'pricing-badge';
+    if (status === 'featured') cls += ' active';
+    return `<span class="${cls}">${status}</span>`;
+}
+
+/* ═══════════════════════════════════════
    TAB NAVIGATION
 ═══════════════════════════════════════ */
 const pageTitles = {
@@ -838,6 +978,7 @@ const pageTitles = {
     promos:    'Manajemen <em>Promo & Voucher</em>',
     ratings:   'Rating <em>Customer</em>',
     sarans:    'Saran <em>Customer</em>',
+    studycase: 'Laporan <em>Study Case</em>',
 };
 
 function switchTab(tab, btn) {
@@ -896,93 +1037,13 @@ function renderPromoTable() {
             <td>${p.usage_limit || '∞'}</td>
             <td>${p.usage_count}</td>
             <td>${p.expires_at ? new Date(p.expires_at).toLocaleDateString() : '—'}</td>
-            <td><span class="pricing-badge badge-active">Aktif</span></td>
+            <td><span class="pricing-badge active">Aktif</span></td>
             <td>
                 <div class="pricing-actions">
                     <button class="btn-xs danger" onclick="deletePromo(${p.id})">Hapus</button>
                 </div>
             </td>
-        </div>
-    `).join('');
-}
-
-function savePromo() {
-    const data = {
-        code: document.getElementById('promoCodeInput').value.toUpperCase(),
-        type: document.getElementById('promoTypeInput').value,
-        reward_value: document.getElementById('promoValueInput').value,
-        usage_limit: document.getElementById('promoLimitInput').value,
-        expires_at: document.getElementById('promoExpiryInput').value,
-    };
-
-    if (!data.code || !data.reward_value) {
-        showToast('Data belum lengkap', 'danger');
-        return;
-    }
-
-    fetch('{{ route("admin.promos.store") }}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify(data)
-    })
-    .then(res => res.json())
-    .then(res => {
-        showToast(res.message, 'success');
-        closeModal('modalPromo');
-        fetchPromos();
-    })
-    .catch(err => showToast('Gagal membuat promo', 'danger'));
-}
-
-function deletePromo(id) {
-    if (!confirm('Hapus promo ini?')) return;
-    fetch('/admin/promos/delete/' + id, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        }
-    })
-    .then(res => res.json())
-    .then(res => {
-        showToast(res.message, 'success');
-        fetchPromos();
-    });
-}
-
-function openAddModal() {
-    const active = document.querySelector('.tab-panel.active').id;
-    if (active === 'tab-venue')   openModal('modalVenue');
-    else if (active === 'tab-vendor')  openModal('modalVendor');
-    else if (active === 'tab-pricing') openModal('modalPricing');
-    else openModal('modalVenue');
-}
-
-/* ═══════════════════════════════════════
-   RENDER CARDS
-═══════════════════════════════════════ */
-function fmtPrice(n) {
-    if (n >= 1000000) return 'Rp ' + (n/1000000).toFixed(0) + 'jt';
-    if (n >= 1000)    return 'Rp ' + (n/1000).toFixed(0) + 'rb';
-    return 'Rp ' + n.toLocaleString('id-ID');
-}
-
-function fmtFull(n) {
-    return 'Rp ' + n.toLocaleString('id-ID');
-}
-
-function statusBadge(s) {
-    const map = { active:'badge-active', inactive:'badge-inactive', featured:'badge-featured' };
-    const label = { active:'Aktif', inactive:'Nonaktif', featured:'Featured' };
-    return `<span class="pricing-badge ${map[s]}">${label[s]}</span>`;
-}
-
-function statusDot(item) {
-    const dot = item.featured ? 'featured' : item.status;
-    const label = item.featured ? 'Featured' : (item.status === 'active' ? 'Aktif' : 'Nonaktif');
-    return `<div class="item-card-status"><div class="status-dot ${dot}"></div><span style="font-size:0.6rem;color:var(--muted-lt)">${label}</span></div>`;
+        </div>`).join('');
 }
 
 function venueCard(v) {
@@ -1199,7 +1260,10 @@ function openDelete(type, id, name) {
 function confirmDelete() {
     if (!deleteTarget) return;
 
-    const url = deleteTarget.type === 'venue' ? '{{ route("admin.venues.delete") }}' : '{{ route("admin.vendors.delete") }}';
+    let url;
+    if (deleteTarget.type === 'venue') url = '{{ route("admin.venues.delete") }}';
+    else if (deleteTarget.type === 'vendor') url = '{{ route("admin.vendors.delete") }}';
+    else if (deleteTarget.type === 'orders') url = '{{ route("admin.orders.delete") }}';
     
     fetch(url, {
         method: 'POST',
@@ -1216,8 +1280,9 @@ function confirmDelete() {
             if (deleteTarget.type === 'vendor') vendors = vendors.filter(v => v.id !== deleteTarget.id);
             
             closeModal('modalDelete');
-            renderVenueGrid();
-            renderVendorGrid();
+            if (deleteTarget.type === 'venue')  renderVenueGrid();
+            if (deleteTarget.type === 'vendor') renderVendorGrid();
+            if (deleteTarget.type === 'orders') setTimeout(() => window.location.reload(), 500);
             renderPricingTables();
             showToast('Item berhasil dihapus permanen dari database', 'danger');
             deleteTarget = null;
@@ -1387,7 +1452,10 @@ function bulkDelete(type) {
     if (ids.length === 0) return;
 
     if (confirm(`Anda yakin ingin menghapus ${ids.length} item yang dipilih secara permanen dari database?`)) {
-        const url = type === 'venue' ? '{{ route("admin.venues.delete") }}' : '{{ route("admin.vendors.delete") }}';
+        let url;
+        if (type === 'venue') url = '{{ route("admin.venues.delete") }}';
+        else if (type === 'vendor') url = '{{ route("admin.vendors.delete") }}';
+        else if (type === 'orders') url = '{{ route("admin.orders.delete") }}';
 
         fetch(url, {
             method: 'POST',
@@ -1407,6 +1475,7 @@ function bulkDelete(type) {
                 
                 if (type === 'venue') renderVenueGrid();
                 if (type === 'vendor') renderVendorGrid();
+                if (type === 'orders') setTimeout(() => window.location.reload(), 500);
                 renderPricingTables();
                 
                 document.getElementById(`bulk-${type}`).style.display = 'none';
@@ -1423,13 +1492,15 @@ function bulkDelete(type) {
     }
 }
 
+
+
 /* ═══════════════════════════════════════
    SEARCH FILTER
 ═══════════════════════════════════════ */
 function filterCards(input, gridId) {
     const q = input.value.toLowerCase();
     document.querySelectorAll(`#${gridId} .item-card`).forEach(card => {
-        card.style.display = card.dataset.name.includes(q) ? '' : 'none';
+        card.style.display = card.dataset.name.includes(q) ? 'grid' : 'none';
     });
 }
 
@@ -1466,8 +1537,46 @@ document.addEventListener('DOMContentLoaded', () => {
         switchTab('dashboard'); // Default
     }
 });
+function updateOrderStatus(id, newStatus) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    fetch('{{ route("admin.orders.update-status") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({ id: id, status: newStatus })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast(`Status pesanan #${id} berhasil diubah menjadi "${newStatus}"`, 'success');
+            
+            // Update color feedback manually to avoid reload
+            const select = event.target;
+            if (newStatus === 'Selesai') {
+                select.style.background = 'rgba(52,199,89,0.1)';
+                select.style.color = 'var(--success)';
+            } else if (newStatus === 'Dibatalkan') {
+                select.style.background = 'rgba(255,59,48,0.1)';
+                select.style.color = 'var(--danger)';
+            } else {
+                select.style.background = 'rgba(255,159,10,0.1)';
+                select.style.color = 'var(--warning)';
+            }
+        } else {
+            showToast('Gagal memperbarui status pesanan', 'danger');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Terjadi kesalahan koneksi', 'danger');
+    });
+}
 </script>
 
 <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>
+

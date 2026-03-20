@@ -114,9 +114,11 @@ class BookingController extends Controller
         $orders = [];
         foreach ($myBookings as $booking) {
             // Map status classes
-            $statusClass = 'status-warning';
-            if ($booking->status === 'Selesai') $statusClass = 'status-success';
-            if ($booking->status === 'Dibatalkan') $statusClass = 'status-danger';
+            $status = $booking->status ?? 'Belum Diproses';
+            $statusClass = 'status-warning'; // Default for 'Belum Diproses' & 'Diproses'
+            
+            if ($status === 'Selesai') $statusClass = 'status-success';
+            if ($status === 'Dibatalkan') $statusClass = 'status-danger';
 
             $details = is_string($booking->booking_details) ? json_decode($booking->booking_details, true) : ($booking->booking_details ?? []);
 
@@ -129,7 +131,7 @@ class BookingController extends Controller
                 'location' => $details['location'] ?? '-',
                 'date' => $booking->created_at ? $booking->created_at->format('d M Y') : date('d M Y'),
                 'total_price' => 'IDR ' . number_format((float)($booking->total_price ?? 0), 0, ',', '.'),
-                'status' => $booking->status ?? 'Diproses',
+                'status' => $status,
                 'status_class' => $statusClass,
                 'image' => asset(ltrim($details['image'] ?? '', '/'))
             ];
@@ -197,3 +199,4 @@ class BookingController extends Controller
         }
     }
 }
+

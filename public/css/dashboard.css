@@ -1,4 +1,4 @@
-﻿/* ── RESET & BASE ── */
+/* ── RESET & BASE ── */
 *,
 *::before,
 *::after {
@@ -657,26 +657,36 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     }
 }
 
-/* ── RESPONSIVE ── */
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 1024px) {
+    .sidebar { width: 260px; }
+    .hero-title { font-size: 3rem; }
+}
+
+@media (max-width: 768px) {
+    .header { height: 64px; padding: 0 20px; }
+    .header-logo { font-size: 1.6rem; }
+    .main { padding: 30px 16px 60px; }
+    .hero-title { font-size: 2.6rem; }
+    .search-card { padding: 28px 24px; }
+}
+
 @media (max-width: 480px) {
-    .header {
-        padding: 0 20px;
-    }
-
-    .header-logo {
-        font-size: 1.5rem;
-    }
-
-    .search-card {
-        padding: 24px 20px 22px;
-        border-radius: 20px;
-    }
-
-    .date-row {
-        grid-template-columns: 1fr;
-    }
-
-    .hero-title {
-        font-size: 2.2rem;
-    }
+    .header { height: 56px; padding: 0 16px; }
+    .header-logo { font-size: 1.4rem; }
+    .sidebar { width: 85%; }
+    .main { padding: 20px 12px 40px; margin-top: 56px; }
+    .hero-eyebrow { letter-spacing: 0.15em; font-size: 0.6rem; }
+    .hero-title { font-size: 2.1rem; }
+    .hero-subtitle { font-size: 0.75rem; }
+    .search-card { padding: 22px 18px; border-radius: 20px; }
+    .tabs { margin-bottom: 20px; }
+    .tab { font-size: 0.7rem; padding: 8px 12px; }
+    .field-label { font-size: 0.58rem; }
+    .field select, .field input { padding: 11px 16px; font-size: 0.82rem; }
+    .date-row { grid-template-columns: 1fr; gap: 0; }
+    .btn-go { padding: 13px; font-size: 0.7rem; letter-spacing: 0.15em; }
+    .footer-text { font-size: 0.75rem; margin-top: 24px; }
 }

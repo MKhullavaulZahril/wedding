@@ -63,3 +63,4 @@ class FlowerController extends Controller
         return view('flower-detail', ['vendor' => $vendorData]);
     }
 }
+

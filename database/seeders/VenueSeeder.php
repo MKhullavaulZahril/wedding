@@ -53,8 +53,8 @@ class VenueSeeder extends Seeder
 
     // LIST DATA DASAR
     $venues = [
-        ['name' => 'Aula Masjid Manarul Aman', 'image' => $ballroomDir . 'Aula-Masjid-Manarul-Aman.webp', 'category' => 'gedung', 'location' => 'Jakarta'],
-        ['name' => 'Balai Kartini', 'image' => $ballroomDir . 'Balai-Kartini.webp', 'category' => 'gedung', 'location' => 'Jakarta Selatan'],
+        ['name' => 'Aula Masjid Manarul Aman', 'image' => $ballroomDir . 'Aula-Masjid-Manarul-Aman.webp', 'category' => 'Ballroom', 'location' => 'Jakarta'],
+        ['name' => 'Balai Kartini', 'image' => $ballroomDir . 'Balai-Kartini.webp', 'category' => 'Ballroom', 'location' => 'Sidoarjo'],
         ['name' => 'Bumi Samami', 'image' => $tamanDir . 'Bumi Samami.webp', 'category' => 'taman', 'location' => 'Bandung'],
         ['name' => 'Hotel Dafam Semarang', 'image' => $resortDir . 'Hotel Dafam Semarang.jpg', 'category' => 'resort', 'location' => 'Semarang'],
         ['name' => 'Merusaka Nusa Dua', 'image' => $pulauDir . 'Merusaka Nusa Dua.jpg', 'category' => 'pulau', 'location' => 'Bali'],

@@ -9,7 +9,7 @@
 </head>
 <body>
     <nav class="navbar">
-        <a href="{{ route('dashboard') }}" style="position:absolute; left:40px; text-decoration:none; color:var(--muted); font-size:12px; font-weight:600; display:flex; align-items:center; gap:8px;">
+        <a href="{{ route('home') }}" style="position:absolute; left:40px; text-decoration:none; color:var(--muted); font-size:12px; font-weight:600; display:flex; align-items:center; gap:8px;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
                 <line x1="19" y1="12" x2="5" y2="12"></line>
                 <polyline points="12 19 5 12 12 5"></polyline>
@@ -24,6 +24,18 @@
             <h1>Review &amp; Rating</h1>
             <p>Bagikan pengalaman Anda dan bantu calon pengantin lainnya</p>
         </div>
+
+        @if(session('success'))
+            <div style="background:#e6f4ea; color:#1e7e34; padding:15px; border-radius:10px; margin-bottom:20px; font-size:13px; font-weight:600;">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div style="background:#fce8e6; color:#d93025; padding:15px; border-radius:10px; margin-bottom:20px; font-size:13px; font-weight:600;">
+                {{ session('error') }}
+            </div>
+        @endif
 
         <div class="grid-layout">
             <!-- Left Column: Form -->
@@ -306,6 +318,14 @@
                     inputField.value = val;
                     stars.forEach((s, i) => s.classList.toggle('active', i < val));
                 });
+                
+                star.addEventListener('mouseenter', () => {
+                    stars.forEach((s, i) => s.classList.toggle('selected', i <= index));
+                });
+                
+                star.addEventListener('mouseleave', () => {
+                    stars.forEach(s => s.classList.remove('selected'));
+                });
             });
         });
 
@@ -336,3 +356,4 @@
     <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>
+

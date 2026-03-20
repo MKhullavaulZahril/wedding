@@ -138,3 +138,98 @@ main::-webkit-scrollbar-thumb {
 .overlay.active {
     display: block !important;
 }
+
+/* ── RESPONSIVE GLOBAL ── */
+@media (max-width: 768px) {
+    .sidebar { width: 260px !important; }
+}
+
+@media (max-width: 480px) {
+    .sidebar { width: 80% !important; max-width: 300px !important; }
+    .sidebar-menu li a { padding: 10px 20px !important; font-size: 0.9rem !important; }
+    .sidebar-label { padding: 0 20px 10px !important; }
+}
+
+/* ── HEADER LOGO ── */
+.header-logo {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    font-family: 'Pinyon Script', cursive !important;
+    font-size: 1.6rem !important;
+    color: #1a1025 !important;
+    white-space: nowrap !important;
+    pointer-events: none !important;
+    z-index: 10 !important;
+}
+
+@media (max-width: 480px) {
+    .header-logo { font-size: 1.2rem !important; }
+}
+
+/* ── SEPARATED PILL SEARCH (GLOBAL LUXURY) ── */
+.pill-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 10px auto 30px;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 20px;
+}
+
+.search-pill {
+    background: white;
+    padding: 14px 45px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.05); /* Subtle luxury border */
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    min-width: 250px;
+}
+
+.search-pill:hover {
+    border-color: rgba(192, 67, 95, 0.2);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.04);
+}
+
+.search-pill:focus-within {
+    box-shadow: 0 8px 30px rgba(192, 67, 95, 0.06);
+    border-color: #c0435f;
+    transform: translateY(-1px);
+}
+
+.search-pill input {
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    color: #333;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+}
+
+.search-pill input[type="date"] {
+    font-weight: 600;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Hide browser default calendar icon */
+.search-pill input::-webkit-calendar-picker-indicator {
+    display: none !important;
+    -webkit-appearance: none;
+}
+
+@media (max-width: 480px) {
+    .pill-group { flex-direction: column; gap: 8px; }
+    .search-pill { width: 100%; min-width: unset; padding: 12px 20px; }
+}

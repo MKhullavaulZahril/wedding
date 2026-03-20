@@ -18,10 +18,21 @@ Route::get('/', function () {
         $recentItems = $recentVenues->merge($recentVendors)->shuffle();
     }
 
-    return view('welcome', compact('featuredVenue', 'recentItems'));
+    $ratings = \App\Models\Rating::where('is_approved', true)
+                ->with(['user', 'venue', 'vendor'])
+                ->latest()
+                ->take(3)
+                ->get();
+
+    return view('welcome', compact('featuredVenue', 'recentItems', 'ratings'));
 })->name('landing');
 
-Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class , 'index'])->name('dashboard');
+// Halaman utama pengguna
+Route::get('/dashboard', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Gateway setelah login - otomatis arahkan admin ke /admin, user ke /dashboard
+Route::get('/login-redirect', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
+
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -53,6 +64,30 @@ Route::get('/rating', function () {
     return view('rating');
 })->name('rating')->middleware('auth');
 
+Route::post('/rating', function (\Illuminate\Http\Request $request) {
+    try {
+        \App\Models\Rating::create([
+            'user_id' => auth()->id(),
+            'overall_rating' => (int) $request->input('rating_overall'),
+            'rating_venue' => (int) $request->input('rating_venue'),
+            'rating_catering' => (int) $request->input('rating_catering'),
+            'rating_service' => (int) $request->input('rating_service'),
+            'rating_price' => (int) $request->input('rating_price'),
+            'review_text' => $request->input('review_text'),
+            'is_anonymous' => $request->input('is_anonymous') == '1',
+            'is_approved' => true, // Auto approve for now or set to false if review needed
+        ]);
+
+        if ($request->hasFile('review_photo')) {
+            // Handle photo upload if needed, but for now just save the data
+        }
+
+        return redirect()->route('home')->with('success', 'Terima kasih atas ulasan Anda!');
+    } catch (\Exception $e) {
+        return back()->with('error', 'Gagal mengirim ulasan: ' . $e->getMessage());
+    }
+})->name('rating.store')->middleware('auth');
+
 Route::get('/saran', function () {
     return view('saran');
 })->name('saran')->middleware('auth');
@@ -64,7 +99,7 @@ Route::post('/saran', function (\Illuminate\Http\Request $request) {
         'title' => $request->input('title'),
         'content' => $request->input('saran'),
     ]);
-    return redirect()->route('dashboard')->with('success', 'Terima kasih! Saran Anda telah kami terima.');
+    return redirect()->route('home')->with('success', 'Terima kasih! Saran Anda telah kami terima.');
 })->name('saran.store')->middleware('auth');
 
 Route::get('/studycase', function () {
@@ -111,9 +146,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         });
 
         $sarans = \App\Models\Saran::latest()->get();
-        $ratings = \App\Models\Rating::latest()->get();
+        $ratings = \App\Models\Rating::with(['user', 'venue', 'vendor'])->latest()->get();
+        $bookings = \App\Models\Booking::with(['user'])->latest()->get();
+        $users = \App\Models\User::orderBy('id')->get();
+        $venuesPaged = \App\Models\Venue::paginate(10); // Specifically for Study Case report
 
-        return view('admin.dashboard', compact('venues', 'vendors', 'sarans', 'ratings'));
+        return view('admin.dashboard', compact('venues', 'vendors', 'sarans', 'ratings', 'bookings', 'users', 'venuesPaged'));
     })->name('admin.dashboard');
 
     // Admin Action Routes
@@ -197,5 +235,55 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/promos', [\App\Http\Controllers\PromoController::class, 'index'])->name('admin.promos');
     Route::post('/promos/store', [\App\Http\Controllers\PromoController::class, 'store'])->name('admin.promos.store');
     Route::post('/promos/delete/{id}', [\App\Http\Controllers\PromoController::class, 'destroy'])->name('admin.promos.delete');
+
+    // Rating Management
+    Route::post('/ratings/approve', function (\Illuminate\Http\Request $request) {
+        $rating = \App\Models\Rating::findOrFail($request->input('id'));
+        $rating->is_approved = !$rating->is_approved;
+        $rating->save();
+        return response()->json(['success' => true]);
+    })->name('admin.ratings.approve');
+
+    Route::post('/ratings/delete', function (\Illuminate\Http\Request $request) {
+        \App\Models\Rating::where('id', $request->input('id'))->delete();
+        return response()->json(['success' => true]);
+    })->name('admin.ratings.delete');
+
+    Route::post('/ratings/store', function (\Illuminate\Http\Request $request) {
+        try {
+            $rating = new \App\Models\Rating();
+            $rating->user_id = auth()->id(); // Admin who creates it
+            $rating->review_text = $request->input('review_text');
+            $rating->overall_rating = (int) $request->input('rating');
+            $rating->is_anonymous = $request->input('is_anonymous') === 'on';
+            $rating->is_approved = true;
+            
+            // Tambahkan tag manual jika user_id tidak ada
+            $rating->manual_author = $request->input('author_name');
+            $rating->manual_target = $request->input('target_name');
+
+            $rating->save();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    })->name('admin.ratings.store');
+
+    Route::post('/orders/update-status', function (\Illuminate\Http\Request $request) {
+        try {
+            $booking = \App\Models\Booking::findOrFail($request->input('id'));
+            $booking->status = $request->input('status');
+            $booking->save();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    })->name('admin.orders.update-status');
+
+    Route::post('/orders/delete', function (\Illuminate\Http\Request $request) {
+        $ids = (array) $request->input('ids');
+        \App\Models\Booking::whereIn('id', $ids)->delete();
+        return response()->json(['success' => true]);
+    })->name('admin.orders.delete');
 });
 Route::post('/promos/validate', [\App\Http\Controllers\PromoController::class, 'validatePromo'])->name('promos.validate');

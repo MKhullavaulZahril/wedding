@@ -6,7 +6,7 @@
     <title>{{ $venue['name'] }} - Wedding Organizations</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/venue-detail.css') }}">
     <link rel="stylesheet" href="{{ asset('css/global-layout.css') }}">
     <link rel="stylesheet" href="{{ asset('css/cart.css') }}">
@@ -20,7 +20,7 @@
     <aside class="sidebar sidebar-left" id="leftSidebar">
         <p class="sidebar-label">Jelajahi</p>
         <ul class="sidebar-menu">
-            <li><a href="{{ route('dashboard') }}">Beranda</a></li>
+            <li><a href="{{ route('home') }}">Beranda</a></li>
             <li><a href="{{ route('venues.index') }}">Gedung</a></li>
             <li><a href="{{ route('flowers.index') }}">Vendor</a></li>
         </ul>
@@ -62,6 +62,9 @@
                         @endauth
                     </a>
                 </div>
+
+                <span class="header-logo">Wedding Organizations</span>
+
                 <div class="menu-icon" id="toggleRight">
                     <span></span>
                     <span></span>
@@ -71,9 +74,23 @@
         </header>
 
         <!-- --- DATE INFO --- -->
-        <div class="search-pills-row">
-            <div class="pill-input">{{ request('date_start', date('Y-m-d')) }}</div>
-            <div class="pill-input">{{ request('date_end', date('Y-m-d', strtotime('+1 day'))) }}</div>
+        <div class="pills-container-detail">
+            <form action="{{ url()->current() }}" method="GET" class="pill-group" style="margin-bottom: 0;">
+                {{-- Maintain query parameters (category, q, etc.) --}}
+                @foreach(request()->except(['date_start', 'date_end']) as $key => $value)
+                    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                @endforeach
+
+                {{-- Pill: Start Date --}}
+                <div class="search-pill">
+                    <input type="date" name="date_start" value="{{ request('date_start', date('Y-m-d')) }}" onchange="this.form.submit()">
+                </div>
+
+                {{-- Pill: End Date --}}
+                <div class="search-pill">
+                    <input type="date" name="date_end" value="{{ request('date_end', date('Y-m-d', strtotime('+1 day'))) }}" onchange="this.form.submit()">
+                </div>
+            </form>
         </div>
     </div>
 
@@ -241,3 +258,4 @@
     <script src="//instant.page/5.2.0" type="module"></script>
 </body>
 </html>
+

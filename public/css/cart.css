@@ -659,4 +659,23 @@
 @keyframes toastOut {
     from { opacity: 1; transform: translateY(0) scale(1); }
     to { opacity: 0; transform: translateY(-10px) scale(0.95); }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE DESIGN
+═══════════════════════════════════════ */
+@media (max-width: 480px) {
+    .cart-panel { width: 100%; border-radius: 0; }
+    .cart-float-btn { width: 52px; height: 52px; bottom: 20px; right: 20px; }
+    .cart-badge { width: 18px; height: 18px; font-size: 0.65rem; }
+    .cart-header { padding: 16px; }
+    .cart-title { font-size: 1.3rem; }
+    .cart-items-area { padding: 12px 16px; }
+    .cart-item-img { width: 60px; height: 60px; }
+    .cart-item-name { font-size: 0.85rem; }
+    .cart-footer { padding: 16px; }
+    .cart-btn-checkout { padding: 14px; font-size: 0.7rem; }
+    .wo-notification { min-width: 280px; width: 90vw; padding: 12px 16px; }
+    .wo-modal { padding: 24px 20px; border-radius: 16px; }
+    .wo-modal-title { font-size: 1.4rem; }
 }
