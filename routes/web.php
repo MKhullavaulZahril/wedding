@@ -123,7 +123,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
                 'capacity' => 500,
                 'city' => $v->location ?? '-',
                 'img' => $v->image,
-                'photos' => is_array($v->gallery) ? count($v->gallery) : (is_string($v->gallery) ? count(json_decode($v->gallery, true) ?? []) : 0),
+                'photos' => is_array($v->gallery) ? count($v->gallery) : (is_string($v->gallery) && !empty($v->gallery) ? count(json_decode($v->gallery, true) ?? []) : 0),
                 'status' => 'active',
                 'featured' => false
             ];
@@ -287,3 +287,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     })->name('admin.orders.delete');
 });
 Route::post('/promos/validate', [\App\Http\Controllers\PromoController::class, 'validatePromo'])->name('promos.validate');
+
+// Admin Protected Routes
+Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function() {
+    Route::get('/admin/landing-editor', [\App\Http\Controllers\Admin\LandingEditorController::class, 'index'])->name('admin.landing.editor');
+    Route::post('/admin/landing-editor', [\App\Http\Controllers\Admin\LandingEditorController::class, 'update'])->name('admin.landing.update');
+
+    // Visual Landing Page Editor
+    Route::get('/admin/landing-visual', [\App\Http\Controllers\Admin\LandingEditorController::class, 'visualEditor'])->name('admin.landing.visual');
+    Route::post('/admin/landing-visual/update', [\App\Http\Controllers\Admin\LandingEditorController::class, 'updateVisual'])->name('admin.landing.visual.update');
+});
