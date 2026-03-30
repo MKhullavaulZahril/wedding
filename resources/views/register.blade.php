@@ -80,30 +80,7 @@
                     </div>
                 </div>
 
-                <div class="field">
-                    <label class="field-label">Daftar Sebagai</label>
-                    <div class="input-wrap">
-                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        </svg>
-                        <select name="role" id="roleSelect" required style="width:100%; height:100%; background:transparent; border:none; outline:none; font-family:inherit; color:var(--text); padding-left:40px; cursor:pointer; -webkit-appearance:none;">
-                            <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User (Pengguna Umum)</option>
-                            <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin (Pengelola Website)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Field No HP (Hanya untuk Admin) -->
-                <div class="field" id="phoneField" style="display:none;">
-                    <label class="field-label">Nomor WhatsApp</label>
-                    <div class="input-wrap">
-                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l2.28-2.28a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                        </svg>
-                        <input type="text" id="phone" name="phone" placeholder="Contoh: 081234567890">
-                    </div>
-                    <p style="font-size:0.75rem; color:var(--gold-deep); margin-top:8px;">* Pendaftaran Admin dilakukan melalui verifikasi WhatsApp manual.</p>
-                </div>
+                <input type="hidden" name="role" value="user">
 
                 <div id="passwordArea">
                     <div class="field">
@@ -172,49 +149,12 @@
 
     <script>
         const overlay = document.getElementById('loadingOverlay');
-        const roleSelect = document.getElementById('roleSelect');
-        const phoneField = document.getElementById('phoneField');
         const passwordArea = document.getElementById('passwordArea');
         const submitBtn = document.getElementById('submitBtn');
         const registerForm = document.getElementById('registerForm');
 
-        roleSelect.addEventListener('change', () => {
-            if (roleSelect.value === 'admin') {
-                phoneField.style.display = 'block';
-                passwordArea.style.display = 'none';
-                document.getElementById('password').required = false;
-                document.getElementById('password_confirmation').required = false;
-                document.getElementById('phone').required = true;
-                submitBtn.querySelector('span').textContent = 'Kirim Pengajuan WhatsApp';
-            } else {
-                phoneField.style.display = 'none';
-                passwordArea.style.display = 'block';
-                document.getElementById('password').required = true;
-                document.getElementById('password_confirmation').required = true;
-                document.getElementById('phone').required = false;
-                submitBtn.querySelector('span').textContent = 'Buat Akun Sekarang';
-            }
-        });
-
-        registerForm.addEventListener('submit', (e) => {
-            if (roleSelect.value === 'admin') {
-                e.preventDefault();
-                const name  = document.getElementsByName('name')[0].value;
-                const email = document.getElementsByName('email')[0].value;
-                const phone = document.getElementById('phone').value;
-
-                const message = `Halo Admin Wedding Org, perkenalkan saya ${name}.%0A%0A` +
-                                `Saya ingin mendaftar sebagai Admin Website.%0AData diri saya:%0A` +
-                                `- Email: ${email}%0A` +
-                                `- No. WhatsApp: ${phone}%0A%0A` +
-                                `Mohon bantuannya untuk proses verifikasi. Terima kasih.`;
-                
-                // Gunakan nomor tujuan pendaftaran admin
-                const waNumber = "6288989337729"; 
-                window.open(`https://wa.me/${waNumber}?text=${message}`, '_blank');
-            } else {
-                overlay.classList.add('active');
-            }
+        registerForm.addEventListener('submit', () => {
+            overlay.classList.add('active');
         });
 
         document.getElementById('googleBtn').addEventListener('click', () => {
