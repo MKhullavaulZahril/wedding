@@ -177,6 +177,14 @@ class BookingController extends Controller
                 return redirect()->route('orders')->with('success', 'Pembayaran Keranjang Berhasil! Semua item telah diproses.');
             }
 
+            // Tambahkan logika kenaikan jumlah pemakaian promo jika ada
+            if ($request->filled('promo_code')) {
+                $promo = \App\Models\Promo::where('code', $request->promo_code)->first();
+                if ($promo) {
+                    $promo->increment('usage_count');
+                }
+            }
+
             // Pembayaran single item (logika lama)
             Booking::create([
                 'user_id' => $userId,
@@ -189,6 +197,7 @@ class BookingController extends Controller
                     'image' => $request->image ?? '',
                     'location' => $request->location ?? '',
                     'payment_method' => $request->payment_method ?? 'Card',
+                    'promo_code' => $request->promo_code, // Simpan info promo ke riwayat
                 ],
             ]);
 

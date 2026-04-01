@@ -53,8 +53,8 @@ class VenueSeeder extends Seeder
 
     // LIST DATA DASAR
     $venues = [
-        ['name' => 'Aula Masjid Manarul Aman', 'image' => $ballroomDir . 'Aula-Masjid-Manarul-Aman.webp', 'category' => 'Ballroom', 'location' => 'Jakarta'],
-        ['name' => 'Balai Kartini', 'image' => $ballroomDir . 'Balai-Kartini.webp', 'category' => 'Ballroom', 'location' => 'Sidoarjo'],
+        ['name' => 'Aula Masjid Manarul Aman', 'image' => $ballroomDir . 'Aula-Masjid-Manarul-Aman.webp', 'category' => 'gedung', 'location' => 'Jakarta'],
+        ['name' => 'Balai Kartini', 'image' => $ballroomDir . 'Balai-Kartini.webp', 'category' => 'gedung', 'location' => 'Surabaya'],
         ['name' => 'Bumi Samami', 'image' => $tamanDir . 'Bumi Samami.webp', 'category' => 'taman', 'location' => 'Bandung'],
         ['name' => 'Hotel Dafam Semarang', 'image' => $resortDir . 'Hotel Dafam Semarang.jpg', 'category' => 'resort', 'location' => 'Semarang'],
         ['name' => 'Merusaka Nusa Dua', 'image' => $pulauDir . 'Merusaka Nusa Dua.jpg', 'category' => 'pulau', 'location' => 'Bali'],
@@ -80,7 +80,7 @@ class VenueSeeder extends Seeder
             'name' => $v['name'] . ' ' . ($i + 1),
             'owner' => 'Vendor Pernikahan',
             'location' => $v['location'],
-            'price' => 'IDR ' . number_format(rand(5, 50), 0, ',', '.') . '.000.000 / Malam',
+            'price' => (rand(5, 50) * 1000000),
             'image' => $v['image'],
             'gallery' => array_values($finalGallery),
             'about' => $v['name'] . ' merupakan lokasi impian untuk pernikahan Anda.',

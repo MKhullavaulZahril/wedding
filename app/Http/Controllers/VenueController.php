@@ -19,14 +19,15 @@ class VenueController extends Controller
         $query = Venue::query();
 
         if ($category) {
-            $query->where('category', 'like', '%' . $category . '%');
+            $query->where('category', trim($category));
         }
 
         if ($location) {
-            $query->where('location', 'like', '%' . $location . '%');
+            $query->where('location', 'like', '%' . trim($location) . '%');
         }
 
         if ($keyword) {
+            $keyword = trim($keyword);
             $query->where(function($q) use ($keyword) {
                 $q->where('name', 'like', '%' . $keyword . '%')
                   ->orWhere('about', 'like', '%' . $keyword . '%');

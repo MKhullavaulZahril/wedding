@@ -113,6 +113,14 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/', function () {
         $venues = \App\Models\Venue::all()->map(function($v) {
+            $gallery = $v->gallery;
+            $count = 0;
+            if (is_array($gallery)) {
+                $count = count($gallery);
+            } elseif (is_string($gallery) && !empty($gallery)) {
+                $decoded = json_decode($gallery, true);
+                $count = is_array($decoded) ? count($decoded) : 0;
+            }
             return [
                 'id' => $v->id,
                 'name' => $v->name,
@@ -123,7 +131,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
                 'capacity' => 500,
                 'city' => $v->location ?? '-',
                 'img' => $v->image,
-                'photos' => is_array($v->gallery) ? count($v->gallery) : (is_string($v->gallery) && !empty($v->gallery) ? count(json_decode($v->gallery, true) ?? []) : 0),
+                'photos' => $count,
                 'status' => 'active',
                 'featured' => false
             ];
@@ -149,9 +157,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         $ratings = \App\Models\Rating::with(['user', 'venue', 'vendor'])->latest()->get();
         $bookings = \App\Models\Booking::with(['user'])->latest()->get();
         $users = \App\Models\User::orderBy('id')->get();
+        $promos = \App\Models\Promo::latest()->get();
         $venuesPaged = \App\Models\Venue::paginate(10); // Specifically for Study Case report
 
-        return view('admin.dashboard', compact('venues', 'vendors', 'sarans', 'ratings', 'bookings', 'users', 'venuesPaged'));
+        return view('admin.dashboard', compact('venues', 'vendors', 'sarans', 'ratings', 'bookings', 'users', 'venuesPaged', 'promos'));
     })->name('admin.dashboard');
 
     // Admin Action Routes
@@ -285,6 +294,71 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         \App\Models\Booking::whereIn('id', $ids)->delete();
         return response()->json(['success' => true]);
     })->name('admin.orders.delete');
+
+    // User Management Actions
+    Route::post('/users', function (\Illuminate\Http\Request $request) {
+        try {
+            $userId = $request->input('id');
+            $rules = [
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email' . ($userId ? ',' . $userId : ''),
+                'password' => $userId ? 'nullable|min:8' : 'required|min:8',
+                'role' => 'required|in:admin,user',
+            ];
+
+            $data = $request->validate($rules);
+
+            if ($userId) {
+                $user = \App\Models\User::findOrFail($userId);
+                $user->name = $data['name'];
+                $user->email = $data['email'];
+                $user->role = $data['role'];
+                if (!empty($data['password'])) {
+                    $user->password = \Illuminate\Support\Facades\Hash::make($data['password']);
+                }
+                $user->save();
+                return response()->json(['success' => true, 'user' => $user, 'mode' => 'edit']);
+            } else {
+                $user = \App\Models\User::create([
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'password' => \Illuminate\Support\Facades\Hash::make($data['password']),
+                    'role' => $data['role'],
+                ]);
+                return response()->json(['success' => true, 'user' => $user, 'mode' => 'add']);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
+        }
+    })->name('admin.users.store');
+
+    Route::post('/users/delete', function (\Illuminate\Http\Request $request) {
+        try {
+            $user = \App\Models\User::findOrFail($request->input('id'));
+            if ($user->id === auth()->id()) {
+                return response()->json(['success' => false, 'message' => 'Anda tidak bisa menghapus akun Anda sendiri'], 403);
+            }
+            $user->delete();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    })->name('admin.users.delete');
+
+    Route::post('/users/update-role', function (\Illuminate\Http\Request $request) {
+        try {
+            $user = \App\Models\User::findOrFail($request->input('id'));
+            $user->role = $request->input('role');
+            $user->save();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    })->name('admin.users.update-role');
+
+    // Promo Additional Actions
+    Route::post('/promos/{id}/update', [\App\Http\Controllers\PromoController::class, 'update'])->name('admin.promos.update');
+    Route::post('/promos/toggle/{id}', [\App\Http\Controllers\PromoController::class, 'toggleActive'])->name('admin.promos.toggle');
 });
 Route::post('/promos/validate', [\App\Http\Controllers\PromoController::class, 'validatePromo'])->name('promos.validate');
 

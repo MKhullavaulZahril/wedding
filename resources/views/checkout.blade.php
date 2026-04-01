@@ -113,12 +113,11 @@
             </div>
 
             <!-- Step 3: Kode Promo -->
-            <div class="section-title">3. Kode Promo & Voucher</div>
             <div class="promo-box">
                 <div class="input-group" style="flex: 1; margin-bottom: 0;">
-                    <input type="text" class="modern-input" placeholder="Punya kode promo?">
+                    <input type="text" id="promo-input" class="modern-input" placeholder="Punya kode promo?">
                 </div>
-                <button type="button" class="btn-apply">Gunakan</button>
+                <button type="button" class="btn-apply" onclick="applyPromo()">Gunakan</button>
             </div>
 
             <!-- Step 4: Metode Pembayaran -->
@@ -256,7 +255,8 @@
                 <input type="hidden" name="item_name" value="{{ $booking['item_name'] }}">
                 <input type="hidden" name="image" value="{{ str_replace(url('/'), '', $booking['image']) }}">
                 <input type="hidden" name="location" value="{{ $booking['location'] }}">
-                <input type="hidden" name="total_price" value="{{ preg_replace('/\D/', '', $booking['summary']['Total']) }}">
+                <input type="hidden" name="total_price" id="final_total_price" value="{{ preg_replace('/\D/', '', $booking['summary']['Total']) }}">
+                <input type="hidden" name="promo_code" id="applied_promo_code" value="">
 
                 <!-- Terms -->
                 <div class="terms-check">
@@ -468,88 +468,90 @@
         });
 
         // Promo Logic
-        const promoInput = document.querySelector('.promo-box input');
-        const promoBtn = document.querySelector('.btn-apply');
-        let appliedPromo = null;
+        function applyPromo() {
+            const promoInput = document.getElementById('promo-input');
+            const promoBtn = document.querySelector('.btn-apply');
+            const code = promoInput.value.toUpperCase().trim();
+            
+            if (!code) return;
 
-        if (promoBtn) {
-            promoBtn.addEventListener('click', () => {
-                const code = promoInput.value.toUpperCase();
-                if (!code) return;
+            promoBtn.disabled = true;
+            promoBtn.innerText = '⏳';
 
-                promoBtn.disabled = true;
-                promoBtn.innerText = '⏳';
-
-                fetch('{{ route("promos.validate") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ code: code })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.valid) {
-                        appliedPromo = data;
-                        applyDiscount();
-                        alert('Promo berhasil digunakan!');
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(err => alert('Gagal memproses kode promo'))
-                .finally(() => {
-                    promoBtn.disabled = false;
-                    promoBtn.innerText = 'Gunakan';
-                });
+            fetch('{{ route("promos.validate") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ code: code })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.valid) {
+                    document.getElementById('applied_promo_code').value = code;
+                    applyDiscount(data);
+                    alert('Promo berhasil digunakan!');
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Gagal memproses kode promo');
+            })
+            .finally(() => {
+                promoBtn.disabled = false;
+                promoBtn.innerText = 'Gunakan';
             });
         }
 
-        function applyDiscount() {
-            if (!appliedPromo) return;
-
+        function applyDiscount(data) {
             const totalEl = document.querySelector('.summary-item.total .value');
             const summaryDetails = document.querySelector('.summary-details');
             const payBtn = document.getElementById('pay-btn');
+            const finalTotalInput = document.getElementById('final_total_price');
             
+            // Ambil angka dari "IDR 1.234.567"
             let currentTotal = parseInt(totalEl.innerText.replace(/\D/g, ''));
             let discount = 0;
 
-            if (appliedPromo.type === 'percentage') {
-                discount = currentTotal * (appliedPromo.reward_value / 100);
+            if (data.type === 'percentage') {
+                discount = Math.floor(currentTotal * (data.reward_value / 100));
             } else {
-                discount = appliedPromo.reward_value;
+                discount = data.reward_value;
             }
 
             const newTotal = currentTotal - discount;
 
-            // Add discount row to summary
+            // Tambahkan baris diskon di ringkasan
             const discRow = document.createElement('div');
             discRow.className = 'summary-item discount';
             discRow.style.color = '#27ae60';
             discRow.style.fontWeight = '600';
             discRow.innerHTML = `
                 <span class="label">Potongan Promo</span>
-                <span class="value">- Rp ${parseInt(discount).toLocaleString()}</span>
+                <span class="value">- IDR ${parseInt(discount).toLocaleString('id-ID')}</span>
             `;
             
             const totalRow = document.querySelector('.summary-item.total');
             summaryDetails.insertBefore(discRow, totalRow);
 
-            // Update Total
-            totalEl.innerText = 'Rp ' + parseInt(newTotal).toLocaleString();
+            // Update Total di Tampilan
+            totalEl.innerText = 'IDR ' + parseInt(newTotal).toLocaleString('id-ID');
             
-            // Update Pay Button
+            // Update Tombol Bayar
             if (payBtn) {
-                payBtn.innerText = 'BAYAR SEKARANG — Rp ' + parseInt(newTotal).toLocaleString();
+                const btnText = payBtn.innerText.split('—')[0];
+                payBtn.innerText = btnText + ' — IDR ' + parseInt(newTotal).toLocaleString('id-ID');
             }
 
-            // Update hidden field
-            document.querySelector('input[name="total_price"]').value = newTotal;
+            // Update field tersembunyi
+            finalTotalInput.value = newTotal;
             
-            // Disable promo input
-            promoInput.disabled = true;
+            // Kunci input promo
+            document.getElementById('promo-input').disabled = true;
+            const promoBtn = document.querySelector('.btn-apply');
             promoBtn.disabled = true;
             promoBtn.innerText = '✔️';
         }

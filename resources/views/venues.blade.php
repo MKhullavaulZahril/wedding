@@ -148,7 +148,7 @@
         <h2 class="section-title">Pilihan {{ $categoryName }} Untuk Anda</h2>
 
         <div class="venue-grid">
-            @foreach($venues as $index => $venue)
+            @forelse($venues as $index => $venue)
             <div onclick="window.location.href='{{ route('venues.show', $venue['id']) }}'" class="venue-card" style="cursor: pointer; position: relative; text-decoration: none; color: inherit;">
                 <div class="image-container">
                     <img src="{{ $venue['image'] }}" alt="{{ $venue['name'] }}" loading="lazy">
@@ -197,7 +197,19 @@
                     </div>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <div class="empty-results" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: rgba(249, 216, 228, 0.1); border-radius: 20px; border: 1px dashed var(--rose-lt);">
+                <div style="font-size: 3rem; margin-bottom: 20px;">✧</div>
+                <h3 style="font-family: 'Playfair Display', serif; color: var(--ink); margin-bottom: 10px;">Maaf, Venue Tidak Ditemukan</h3>
+                <p style="color: var(--muted); font-size: 0.9rem; max-width: 400px; margin: 0 auto 25px; line-height: 1.6;">
+                    Kami tidak menemukan venue yang sesuai dengan kriteria kategori atau lokasi yang Anda cari di Surabaya.
+                </p>
+                <a href="{{ route('venues.index') }}" class="btn-primary" style="display: inline-block; padding: 12px 30px; background: var(--rose); color: white; border-radius: 30px; text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: transform 0.3s ease;">
+                    Lihat Semua Venue
+                </a>
+            </div>
+            @endforelse
+        </div>
     </main>
     
     @auth
